@@ -30,7 +30,7 @@ public class TabSmelting extends TabWithTexture {
 		
 		fuels.add(new ItemInstance(ItemBase.stick));
 		fuels.add(new ItemInstance(ItemBase.coal));
-		fuels.add(new ItemInstance(ItemBase.bucketLava));
+		fuels.add(new ItemInstance(ItemBase.lavaBucket));
 		fuels.add(new ItemInstance(BlockBase.SAPLING));
 		for(BlockBase block: BlockBase.BY_ID) {
 			if(block != null && (block.material == Material.WOOD /*|| ModLoader.AddAllFuel(block.id) > 0 Not sure how to reimplement in SL*/)

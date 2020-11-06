@@ -204,7 +204,7 @@ public class Utils {
 		hiddenItems.add(new ItemInstance(BlockBase.DOOR_IRON));
 		hiddenItems.add(new ItemInstance(BlockBase.REDSTONE_ORE_LIT));
 		hiddenItems.add(new ItemInstance(BlockBase.REDSTONE_TORCH));
-		hiddenItems.add(new ItemInstance(BlockBase.REEDS));
+		hiddenItems.add(new ItemInstance(BlockBase.SUGAR_CANES));
 		hiddenItems.add(new ItemInstance(BlockBase.CAKE));
 		hiddenItems.add(new ItemInstance(BlockBase.REDSTONE_REPEATER));
 		hiddenItems.add(new ItemInstance(BlockBase.REDSTONE_REPEATER_LIT));
