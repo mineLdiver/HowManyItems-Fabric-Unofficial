@@ -17,8 +17,11 @@
   "license": "CC0-1.0",
   "icon": "assets/hmifabric/icon.png",
 
-  "environment": "client",
+  "environment": "*",
   "entrypoints": {
+    "stationmod_server": [
+      "net.glasslauncher.hmifabric.HowManyItemsServer"
+    ],
     "client": [
       "net.glasslauncher.hmifabric.HowManyItems"
     ]
@@ -26,6 +29,10 @@
   "mixins": [
     "hmifabric.mixins.json"
   ],
+
+  "custom": {
+    "stationloader:verify_client": false
+  },
 
   "depends": {
     "minecraft": "1.0.0-beta.7.3",

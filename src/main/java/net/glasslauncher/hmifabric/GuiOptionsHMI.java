@@ -17,7 +17,8 @@ public class GuiOptionsHMI extends ScreenBase {
 	private Button buttonFastSearch;
 	private Button buttonHiding;
 	private Button buttonInvertedScroll;
-	
+	private Button buttonDevMode;
+
 	private Button buttonKeybinds;
 	private Button buttonTabOrder;
 	
@@ -33,6 +34,7 @@ public class GuiOptionsHMI extends ScreenBase {
         buttons.add(buttonFastSearch = new OptionButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Fast Search: " + (Config.fastSearch ? "ON" : "OFF")));
         buttons.add(buttonHiding = new OptionButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Hide Items Mode: " + (GuiOverlay.showHiddenItems ? "ON" : "OFF")));
         buttons.add(buttonInvertedScroll = new OptionButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Flip Scroll Direction: " + (Config.scrollInverted ? "ON" : "OFF")));
+        buttons.add(buttonDevMode = new OptionButton(++i, (width / 2 - (155/2)) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Enable Developer Mode: " + (Config.devMode ? "ON" : "OFF")));
 
         //buttons.add(new Button(++i, width / 2 - 100, height / 6 + 72 + 12, "Commands & Loadout Names..."));
         buttons.add(buttonKeybinds = new Button(++i, width / 2 - 100, height / 6 + 96 + 12, "Keybinds..."));
@@ -90,6 +92,12 @@ public class GuiOptionsHMI extends ScreenBase {
         {
             minecraft.openScreen(new GuiTabOrder(this));
             return;
+        }
+        else if(guibutton == buttonDevMode)
+        {
+            Config.devMode = !Config.devMode;
+            GuiOverlay.resetItems();
+            buttonDevMode.text = "Enable Developer Mode: " + (Config.devMode ? "ON" : "OFF");
         }
         HowManyItems.onSettingChanged();
     }
@@ -189,6 +197,13 @@ public class GuiOptionsHMI extends ScreenBase {
         		"Change recipe viewer tab order",
         		"Change recipe viewer gui size option"
         	};
+        }
+        else if(guibutton == buttonDevMode)
+        {
+            return new String[] {
+                "Enable showing null items.",
+                "Good for testing if your items are registering properly."
+            };
         }
 		return null;
 	}

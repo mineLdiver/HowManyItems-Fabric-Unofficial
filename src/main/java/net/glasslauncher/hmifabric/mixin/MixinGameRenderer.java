@@ -22,10 +22,10 @@ public class MixinGameRenderer {
         if (minecraft.level != null && HowManyItems.thisMod != null) {
             newClock = minecraft.level.getLevelTime();
             if (newClock != clock) {
-                HowManyItems.thisMod.OnTickInGame(minecraft);
+                HowManyItems.thisMod.onTickInGame(minecraft);
             }
             if (minecraft.currentScreen != null) {
-                HowManyItems.thisMod.OnTickInGUI(minecraft, minecraft.currentScreen);
+                HowManyItems.thisMod.onTickInGUI(minecraft, minecraft.currentScreen);
             }
         }
         clock = newClock;

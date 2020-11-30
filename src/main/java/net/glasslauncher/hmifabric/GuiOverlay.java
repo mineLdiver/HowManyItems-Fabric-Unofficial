@@ -19,6 +19,9 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
 import net.minecraft.level.LevelProperties;
 import net.minecraft.util.CharacterUtils;
+import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
+import net.modificationstation.stationloader.api.common.packet.CustomData;
+import net.modificationstation.stationloader.api.common.packet.PacketHelper;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -370,7 +373,8 @@ public class GuiOverlay extends ScreenBase {
 			}
 			else if(Config.showItemIDs) {
 				s = " " + item.itemId;
-				if(item.method_719()) s+= ":" + item.getDamage();
+				/*if(item.method_719())*/ s+= ":" + item.getDamage();
+				if (item.getType().hasDurability()) s+= "/" + item.getType().getDurability();
 				int j3 = textManager.getTextWidth(s);
 				Utils.drawRect(k1 + j2 + 15, i2 - 15, k1 + j2 + j3 + 15, i2 + 8 - 9, 0xc0000000);
 				textManager.drawTextWithShadow(s, k1 + j2 + 12, i2 - 12, -1);
@@ -402,6 +406,14 @@ public class GuiOverlay extends ScreenBase {
 							if(eventButton == 0) spawnedItem.count = hoverItem.method_709();
 							else spawnedItem.count = 1;
 							minecraft.player.inventory.method_671(spawnedItem);
+						}
+						else if (Config.isHMIServer) {
+							ItemInstance spawnedItem = hoverItem.copy();
+							if(eventButton == 0) spawnedItem.count = hoverItem.method_709();
+							else spawnedItem.count = 1;
+							CustomData customData = GeneralFactory.INSTANCE.newInst(CustomData.class, "hmifabric:giveItem");
+							customData.set(new int[] {spawnedItem.itemId, spawnedItem.count, spawnedItem.getDamage()});
+							PacketHelper.INSTANCE.send(customData.getPacketInstance());
 						}
 						else if(Config.mpGiveCommand.length() > 0) {
 							NumberFormat numberformat = NumberFormat.getIntegerInstance();
@@ -785,17 +797,21 @@ public class GuiOverlay extends ScreenBase {
 		if(searchBox != null && searchBox.method_1876().length() > 0) {
 			for(ItemInstance currentItem : listToSearch) {
 				String s = (TranslationStorage.getInstance().method_995(currentItem.getTranslationKey()));
-				if(s.toLowerCase().contains(searchBox.method_1876().toLowerCase()) && (showHiddenItems || !hiddenItems.contains(currentItem))) {
+				if(s.toLowerCase().contains(searchBox.method_1876().toLowerCase()) && (showHiddenItems || !hiddenItems.contains(currentItem)) && (Config.devMode || !Utils.getNiceItemName(currentItem).endsWith("null"))) {
 					newList.add(currentItem);
 				}
 			}
 		}
 		else if(showHiddenItems) {
-			return new ArrayList<>(Utils.itemList());
+			for(ItemInstance currentItem : Utils.itemList()) {
+				if(Config.devMode || !currentItem.getTranslationKey().endsWith("null")) {
+					newList.add(currentItem);
+				}
+			}
 		}
 		else {
 			for(ItemInstance currentItem : Utils.itemList()) {
-				if(!hiddenItems.contains(currentItem)) {
+				if(!hiddenItems.contains(currentItem) && (Config.devMode || !Utils.getNiceItemName(currentItem).endsWith("null"))) {
 					newList.add(currentItem);
 				}
 			}

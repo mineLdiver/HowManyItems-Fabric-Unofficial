@@ -221,7 +221,8 @@ public class Config {
     public static boolean centredSearchBar = false;
 	public static boolean fastSearch = false;
 	public static boolean scrollInverted = false;
-    
+	public static boolean isHMIServer = true;
+
 	public static String mpGiveCommand = "/give {0} {1} {2}";
 	public static String mpHealCommand = "";
 	public static String mpTimeDayCommand = "/time set 0";
@@ -230,6 +231,7 @@ public class Config {
 	public static String mpRainOFFCommand = "";
 	
     public static boolean recipeViewerDraggableGui = false;
+    public static boolean devMode = false;
     
     public static int recipeViewerGuiWidth = 251;
     public static int recipeViewerGuiHeight = 134;

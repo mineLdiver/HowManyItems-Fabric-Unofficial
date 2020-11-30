@@ -1,6 +1,8 @@
 package net.glasslauncher.hmifabric;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
 import net.glasslauncher.hmifabric.tabs.Tab;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DrawableHelper;
@@ -8,16 +10,23 @@ import net.minecraft.client.gui.screen.ScreenBase;
 import net.minecraft.client.gui.screen.container.ContainerBase;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.ScreenScaler;
+import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
+import net.minecraft.packet.AbstractPacket;
 import net.modificationstation.stationloader.api.client.event.option.KeyBindingRegister;
+import net.modificationstation.stationloader.api.common.event.packet.PacketRegister;
+import net.modificationstation.stationloader.api.common.packet.CustomData;
 import org.lwjgl.input.Mouse;
+import uk.co.benjiweber.expressions.functions.QuadConsumer;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.logging.Logger;
 
-public class HowManyItems implements ClientModInitializer, KeyBindingRegister {
+public class HowManyItems implements ClientModInitializer, KeyBindingRegister, PacketRegister {
 
     public static Logger logger = Logger.getLogger(HowManyItems.class.getName());
 
@@ -26,13 +35,6 @@ public class HowManyItems implements ClientModInitializer, KeyBindingRegister {
     @Override
     public void registerKeyBindings(List<KeyBinding> list) {
         list.add(Config.toggleOverlay);
-    }
-
-    /**
-     * @deprecated Use addTab()
-     */
-    public static void addModTab(Tab tab) {
-        addTab(tab);
     }
 
     //Use this if you are a making a mod that adds a tab
@@ -66,7 +68,7 @@ public class HowManyItems implements ClientModInitializer, KeyBindingRegister {
         Config.writeConfig();
     }
 
-    public boolean OnTickInGUI(Minecraft mc, ScreenBase guiscreen) {
+    public void onTickInGUI(Minecraft mc, ScreenBase guiscreen) {
         if(guiscreen instanceof ContainerBase) {
             ContainerBase screen = (ContainerBase)guiscreen;
             if(Config.overlayEnabled) {
@@ -79,38 +81,35 @@ public class HowManyItems implements ClientModInitializer, KeyBindingRegister {
             if(Utils.isKeyDown(Config.pushRecipe) || Utils.isKeyDown(Config.pushUses)) {
                 if(!keyHeldLastTick) {
                     boolean getUses = Utils.isKeyDown(Config.pushUses);
-                    if (guiscreen instanceof ContainerBase) {
-                        ItemInstance newFilter = null;
+                    ItemInstance newFilter = null;
 
-                        ScreenScaler scaledresolution = new ScreenScaler(mc.options, mc.actualWidth, mc.actualHeight);
-                        int i = scaledresolution.getScaledWidth();
-                        int j = scaledresolution.getScaledHeight();
-                        int posX = (Mouse.getEventX() * i) / mc.actualWidth;
-                        int posY = j - (Mouse.getEventY() * j) / mc.actualHeight - 1;
-                        newFilter = Utils.hoveredItem((ContainerBase)guiscreen, posX, posY);
-                        if (newFilter == null) {
-                            newFilter = GuiOverlay.hoverItem;
-                        }
-                        if(newFilter == null) {
-                            if(guiscreen instanceof GuiRecipeViewer)
-                                newFilter = ((GuiRecipeViewer)guiscreen).getHoverItem();
-                        }
-                        if(newFilter != null) {
-                            pushRecipe(guiscreen, newFilter, getUses);
-                        }
-                        else {
-                            if(Config.overlayEnabled && guiscreen == GuiOverlay.screen && !GuiOverlay.searchBoxFocused() && Config.fastSearch) {
-                                GuiOverlay.focusSearchBox();
-                            }
+                    ScreenScaler scaledresolution = new ScreenScaler(mc.options, mc.actualWidth, mc.actualHeight);
+                    int i = scaledresolution.getScaledWidth();
+                    int j = scaledresolution.getScaledHeight();
+                    int posX = (Mouse.getEventX() * i) / mc.actualWidth;
+                    int posY = j - (Mouse.getEventY() * j) / mc.actualHeight - 1;
+                    newFilter = Utils.hoveredItem((ContainerBase)guiscreen, posX, posY);
+                    if (newFilter == null) {
+                        newFilter = GuiOverlay.hoverItem;
+                    }
+                    if(newFilter == null) {
+                        if(guiscreen instanceof GuiRecipeViewer)
+                            newFilter = ((GuiRecipeViewer)guiscreen).getHoverItem();
+                    }
+                    if(newFilter != null) {
+                        pushRecipe(guiscreen, newFilter, getUses);
+                    }
+                    else {
+                        if(Config.overlayEnabled && guiscreen == GuiOverlay.screen && !GuiOverlay.searchBoxFocused() && Config.fastSearch) {
+                            GuiOverlay.focusSearchBox();
                         }
                     }
                 }
             }
             else if(Utils.isKeyDown(Config.prevRecipe)) {
                 if(!keyHeldLastTick) {
-                    if ((guiscreen instanceof GuiRecipeViewer || guiscreen instanceof GuiOverlay) && !GuiOverlay.searchBoxFocused()) {
-                        if(guiscreen instanceof GuiOverlay && GuiOverlay.screen instanceof GuiRecipeViewer) guiscreen = GuiOverlay.screen;
-                        if(guiscreen instanceof GuiRecipeViewer) ((GuiRecipeViewer) guiscreen).pop();
+                    if (guiscreen instanceof GuiRecipeViewer && !GuiOverlay.searchBoxFocused()) {
+                        ((GuiRecipeViewer) guiscreen).pop();
                     }
                     else {
                         if(Config.overlayEnabled && guiscreen == GuiOverlay.screen && !GuiOverlay.searchBoxFocused() && Config.fastSearch)
@@ -121,35 +120,23 @@ public class HowManyItems implements ClientModInitializer, KeyBindingRegister {
             else if(Config.clearSearchBox.key == Config.focusSearchBox.key
                     && Utils.isKeyDown(Config.clearSearchBox)) {
 
-                if (guiscreen instanceof ContainerBase
-                        || guiscreen instanceof GuiOverlay) {
-                    if(System.currentTimeMillis() > focusCooldown) {
-                        focusCooldown = System.currentTimeMillis() + 800L;
-                        if(!GuiOverlay.searchBoxFocused())
-                            GuiOverlay.clearSearchBox();
-                        GuiOverlay.focusSearchBox();
-                    }
+                if(System.currentTimeMillis() > focusCooldown) {
+                    focusCooldown = System.currentTimeMillis() + 800L;
+                    if(!GuiOverlay.searchBoxFocused())
+                        GuiOverlay.clearSearchBox();
+                    GuiOverlay.focusSearchBox();
                 }
             }
             else if(Utils.isKeyDown(Config.clearSearchBox)) {
-                if (guiscreen instanceof ContainerBase
-                        || guiscreen instanceof GuiOverlay) {
-                    GuiOverlay.clearSearchBox();
-                }
+                GuiOverlay.clearSearchBox();
             }
             else if(Utils.isKeyDown(Config.focusSearchBox)) {
-                if (guiscreen instanceof ContainerBase
-                        || guiscreen instanceof GuiOverlay) {
-                    if(System.currentTimeMillis() > focusCooldown) {
-                        focusCooldown = System.currentTimeMillis() + 800L;
-                        GuiOverlay.focusSearchBox();
-                    }
+                if(System.currentTimeMillis() > focusCooldown) {
+                    focusCooldown = System.currentTimeMillis() + 800L;
+                    GuiOverlay.focusSearchBox();
                 }
             }
             else if(Utils.isKeyDown(Config.allRecipes)) {
-                if (guiscreen instanceof GuiOverlay) {
-                    guiscreen = GuiOverlay.screen;
-                }
                 pushRecipe(guiscreen, null, false);
             }
             else {
@@ -160,16 +147,14 @@ public class HowManyItems implements ClientModInitializer, KeyBindingRegister {
             }
 
         }
-        return true;
     }
 
-    public boolean OnTickInGame(Minecraft minecraft)
+    public void onTickInGame(Minecraft minecraft)
     {
         if(minecraft.currentScreen == null && Utils.isKeyDown(Config.allRecipes) && !keyHeldLastTick) {
             keyHeldLastTick = true;
             pushRecipe(null, null, false);
         }
-        return true;
     }
 
     public static boolean keyHeldLastTick = false;
@@ -224,9 +209,7 @@ public class HowManyItems implements ClientModInitializer, KeyBindingRegister {
 
             TabUtils.loadTabs(allTabs, thisMod);
 
-            for(Tab tab : modTabs) {
-                allTabs.add(tab);
-            }
+            allTabs.addAll(modTabs);
             Config.readConfig();
             tabs = Config.orderTabs();
         }
@@ -240,11 +223,12 @@ public class HowManyItems implements ClientModInitializer, KeyBindingRegister {
 
     private static ArrayList<Tab> tabs;
     public static ArrayList<Tab> allTabs;
-    private static ArrayList<Tab> modTabs = new ArrayList<>();
+    private static final ArrayList<Tab> modTabs = new ArrayList<>();
 
     @Override
     public void onInitializeClient() {
         KeyBindingRegister.EVENT.register(this);
+        PacketRegister.EVENT.register(this, FabricLoader.getInstance().getModContainer("hmifabric").get().getMetadata());
         try {
             fill = Utils.getMethod(DrawableHelper.class, new String[] {"fill", "method_1932"}, new Class<?>[] {int.class, int.class, int.class, int.class, int.class});
         } catch (Exception e) {
@@ -253,5 +237,14 @@ public class HowManyItems implements ClientModInitializer, KeyBindingRegister {
         fill.setAccessible(true);
         thisMod = this;
         Config.init();
+    }
+
+    public static void handleHandshake(PlayerBase playerBase, CustomData customData) {
+        Config.isHMIServer = customData.booleans()[0];
+    }
+
+    @Override
+    public void registerPackets(QuadConsumer<Integer, Boolean, Boolean, Class<? extends AbstractPacket>> quadConsumer, Map<String, BiConsumer<PlayerBase, CustomData>> map) {
+        map.put("handshake", HowManyItems::handleHandshake);
     }
 }
