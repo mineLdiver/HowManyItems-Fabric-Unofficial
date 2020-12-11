@@ -1,6 +1,6 @@
 package net.glasslauncher.hmifabric.tabs;
 
-import net.fabricmc.api.ClientModInitializer;
+import net.modificationstation.stationloader.api.common.mod.StationMod;
 import net.glasslauncher.hmifabric.Utils;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemInstance;
@@ -21,29 +21,29 @@ public class TabGenericBlock extends Tab{
 	protected int slotOffsetY = -4;
 	private String name;
 	
-	public TabGenericBlock(ClientModInitializer tabCreator, Map recipes, BlockBase tabBlock) {
+	public TabGenericBlock(StationMod tabCreator, Map recipes, BlockBase tabBlock) {
 		this(tabCreator, recipes, 1, 1, tabBlock, 0);
 	}
 	
-	public TabGenericBlock(ClientModInitializer tabCreator, Map recipes, BlockBase tabBlock, String name) {
+	public TabGenericBlock(StationMod tabCreator, Map recipes, BlockBase tabBlock, String name) {
 		this(tabCreator, recipes, 1, 1, tabBlock, 0);
 		this.name = name;
 	}
 	
-	public TabGenericBlock(ClientModInitializer tabCreator, Map recipes, BlockBase tabBlock, int metadata) {
+	public TabGenericBlock(StationMod tabCreator, Map recipes, BlockBase tabBlock, int metadata) {
 		this(tabCreator, recipes, 1, 1, tabBlock, metadata);
 	}
 	
-	public TabGenericBlock(ClientModInitializer tabCreator, Map recipes, int inputSlots, int outputSlots, BlockBase tabBlock, String name) {
+	public TabGenericBlock(StationMod tabCreator, Map recipes, int inputSlots, int outputSlots, BlockBase tabBlock, String name) {
 		this(tabCreator, recipes, inputSlots, outputSlots, tabBlock, 0);
 		this.name = name;
 	}
 	
-	public TabGenericBlock(ClientModInitializer tabCreator, Map recipes, int inputSlots, int outputSlots, BlockBase tabBlock, int metadata) {
+	public TabGenericBlock(StationMod tabCreator, Map recipes, int inputSlots, int outputSlots, BlockBase tabBlock, int metadata) {
 		this(tabCreator, inputSlots, outputSlots, recipes, 140, Math.max(42, Math.max(inputSlots * 18 + 4, outputSlots * 18 + 4)), 3, 3, tabBlock, metadata);
 	}
 	
-	public TabGenericBlock(ClientModInitializer tabCreator, int inputSlots, int outputSlots, Map recipes, int width, int height, int minPaddingX, int minPaddingY, BlockBase tabBlock, int metadata) {
+	public TabGenericBlock(StationMod tabCreator, int inputSlots, int outputSlots, Map recipes, int width, int height, int minPaddingX, int minPaddingY, BlockBase tabBlock, int metadata) {
 		super(tabCreator, inputSlots + outputSlots, width, height, minPaddingX, minPaddingY);
 		this.tabBlock = tabBlock;
 		this.metadata = metadata;
@@ -62,6 +62,7 @@ public class TabGenericBlock extends Tab{
 		equivalentCraftingStations.add(getTabItem());
 	}
 
+	@Override
 	public ItemInstance[][] getItems(int index, ItemInstance filter) {
 		ItemInstance[][] items = new ItemInstance[recipesPerPage][];
 		for(int j = 0; j < recipesPerPage; j++)
@@ -103,6 +104,7 @@ public class TabGenericBlock extends Tab{
 		return items;
 	}
 
+	@Override
 	public void updateRecipes(ItemInstance filter, Boolean getUses) {
 		lastIndex = 0;
 		recipes.clear();
@@ -153,6 +155,7 @@ public class TabGenericBlock extends Tab{
 		size = recipes.size();
 	}
 
+	@Override
 	public ItemInstance getTabItem() {
 		return new ItemInstance(tabBlock, 1, metadata);
 	}
@@ -161,6 +164,7 @@ public class TabGenericBlock extends Tab{
 		return getTabItem();
 	}
 
+	@Override
 	public void draw(int x, int y, int recipeOnThisPageIndex, int cursorX, int cursorY) {
 		drawSlotsAndArrows(x, y);
 		Utils.drawScaledItem(getBlockToDraw(), x + WIDTH / 2 - 20, y + HEIGHT / 2 - 19, 40);
@@ -175,6 +179,7 @@ public class TabGenericBlock extends Tab{
 		Utils.drawArrow(x + 92, y + HEIGHT / 2 - 12);
 	}
 	
+	@Override
 	public String name() {
 		if(name != null) {
 			return name;

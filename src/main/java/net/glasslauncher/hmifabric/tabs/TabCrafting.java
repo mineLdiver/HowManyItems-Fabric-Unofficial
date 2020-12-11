@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.fabricmc.api.ClientModInitializer;
+import net.modificationstation.stationloader.api.common.mod.StationMod;
 import net.glasslauncher.hmifabric.Utils;
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.ClientInteractionManager;
@@ -28,12 +28,12 @@ public class TabCrafting extends TabWithTexture {
 	protected List recipesComplete;
 	protected List recipes;
 	private int slotsWidth;
-	protected ClientModInitializer mod;
+	protected StationMod mod;
 	private BlockBase tabBlock;
 	private boolean isVanillaWorkbench = false; //THIS IS LAZY
 	public ArrayList<Class<? extends ContainerBase>> guiCraftingStations = new ArrayList<>();
 	
-	public TabCrafting(ClientModInitializer tabCreator) {
+	public TabCrafting(StationMod tabCreator) {
 		this(tabCreator, new ArrayList(RecipeRegistry.getInstance().getRecipes()), BlockBase.WORKBENCH);
 		for (int i = 0; i < recipesComplete.size(); i++) {
 			//Removes recipes that are too big and ruin everything @flans mod
@@ -47,12 +47,12 @@ public class TabCrafting extends TabWithTexture {
 		guiCraftingStations.add(Crafting.class);
 	}
 	
-	public TabCrafting(ClientModInitializer tabCreator, List recipesComplete, BlockBase tabBlock) {
+	public TabCrafting(StationMod tabCreator, List recipesComplete, BlockBase tabBlock) {
 		this(tabCreator, 10, recipesComplete, tabBlock, "/gui/crafting.png", 118, 56, 28, 15, 56, 46, 3);
 		slots[0] = new Integer[]{96, 23};
 	}
 
-	public TabCrafting(ClientModInitializer tabCreator, int slotsPerRecipe, List recipesComplete, BlockBase tabBlock, String texturePath, int width, int height, int textureX, int textureY, int buttonX, int buttonY, int slotsWidth) {
+	public TabCrafting(StationMod tabCreator, int slotsPerRecipe, List recipesComplete, BlockBase tabBlock, String texturePath, int width, int height, int textureX, int textureY, int buttonX, int buttonY, int slotsWidth) {
 		super(tabCreator, slotsPerRecipe, texturePath, width, height, 3, 4, textureX, textureY, buttonX, buttonY);
 		this.slotsWidth = slotsWidth;
 		this.recipesComplete = recipesComplete;
@@ -67,6 +67,7 @@ public class TabCrafting extends TabWithTexture {
 		equivalentCraftingStations.add(getTabItem());
 	}
 	
+	@Override
 	public ItemInstance[][] getItems(int index, ItemInstance filter) {
 		ItemInstance[][] items = new ItemInstance[recipesPerPage][];
 		for(int j = 0; j < recipesPerPage; j++)
@@ -150,6 +151,7 @@ public class TabCrafting extends TabWithTexture {
 	}
 
 	
+	@Override
 	public void updateRecipes(ItemInstance filter, Boolean getUses) {
 		List arraylist = new ArrayList();
     	if (filter == null) {
@@ -222,10 +224,12 @@ public class TabCrafting extends TabWithTexture {
     	size = recipes.size();
 	}
 
+	@Override
 	public ItemInstance getTabItem() {
 		return new ItemInstance(tabBlock);
 	}
 	
+	@Override
 	public Boolean drawSetupRecipeButton(ScreenBase parent, ItemInstance[] recipeItems) {
 		for(Class<? extends ContainerBase> gui : guiCraftingStations) {
 			if(gui.isInstance(parent)) return true;
@@ -240,6 +244,7 @@ public class TabCrafting extends TabWithTexture {
 		return false;
 	}
 	
+	@Override
 	public Boolean[] itemsInInventory(ScreenBase parent, ItemInstance[] recipeItems) {
 		Boolean[] itemsInInv = new Boolean[slots.length - 1];
 		List list;
@@ -325,6 +330,7 @@ public class TabCrafting extends TabWithTexture {
 		return 1;
 	}
 
+	@Override
 	public void setupRecipe(ScreenBase parent, ItemInstance[] recipeItems) {
 		if (parent == null) {
 			Utils.getMC().method_2134();

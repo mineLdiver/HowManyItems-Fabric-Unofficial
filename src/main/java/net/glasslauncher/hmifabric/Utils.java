@@ -185,31 +185,6 @@ public class Utils {
 	
 	//Returns the default list of items that are hidden in the overlay
 	public static ArrayList<ItemInstance> hiddenItems = new ArrayList<>();
-	static {
-		hiddenItems.add(new ItemInstance(BlockBase.STILL_WATER));
-		hiddenItems.add(new ItemInstance(BlockBase.STILL_LAVA));
-		hiddenItems.add(new ItemInstance(BlockBase.BED));
-		hiddenItems.add(new ItemInstance(BlockBase.TALLGRASS));
-		hiddenItems.add(new ItemInstance(BlockBase.DEADBUSH));
-		hiddenItems.add(new ItemInstance(BlockBase.PISTON_HEAD));
-		hiddenItems.add(new ItemInstance(BlockBase.MOVING_PISTON));
-		hiddenItems.add(new ItemInstance(BlockBase.DOUBLE_STONE_SLAB));
-		hiddenItems.add(new ItemInstance(BlockBase.REDSTONE_DUST));
-		hiddenItems.add(new ItemInstance(BlockBase.CROPS));
-		hiddenItems.add(new ItemInstance(BlockBase.FARMLAND));
-		hiddenItems.add(new ItemInstance(BlockBase.FURNACE_LIT));
-		hiddenItems.add(new ItemInstance(BlockBase.STANDING_SIGN));
-		hiddenItems.add(new ItemInstance(BlockBase.DOOR_WOOD));
-		hiddenItems.add(new ItemInstance(BlockBase.WALL_SIGN));
-		hiddenItems.add(new ItemInstance(BlockBase.DOOR_IRON));
-		hiddenItems.add(new ItemInstance(BlockBase.REDSTONE_ORE_LIT));
-		hiddenItems.add(new ItemInstance(BlockBase.REDSTONE_TORCH));
-		hiddenItems.add(new ItemInstance(BlockBase.SUGAR_CANES));
-		hiddenItems.add(new ItemInstance(BlockBase.CAKE));
-		hiddenItems.add(new ItemInstance(BlockBase.REDSTONE_REPEATER));
-		hiddenItems.add(new ItemInstance(BlockBase.REDSTONE_REPEATER_LIT));
-		hiddenItems.add(new ItemInstance(BlockBase.LOCKED_CHEST));
-	}
 	
 	//Returns the number of enabled tabs
 	public static int visibleTabSize() {

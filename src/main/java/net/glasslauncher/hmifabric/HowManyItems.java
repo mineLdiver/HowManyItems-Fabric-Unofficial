@@ -1,6 +1,10 @@
 package net.glasslauncher.hmifabric;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.ModInitializer;
+import net.minecraft.block.BlockBase;
+import net.modificationstation.stationloader.api.common.event.mod.PostInit;
+import net.modificationstation.stationloader.api.common.mod.StationMod;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.glasslauncher.hmifabric.tabs.Tab;
@@ -15,18 +19,22 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.packet.AbstractPacket;
 import net.modificationstation.stationloader.api.client.event.option.KeyBindingRegister;
 import net.modificationstation.stationloader.api.common.event.packet.PacketRegister;
+import net.modificationstation.stationloader.api.common.mod.StationMod;
 import net.modificationstation.stationloader.api.common.packet.CustomData;
 import org.lwjgl.input.Mouse;
 import uk.co.benjiweber.expressions.functions.QuadConsumer;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.logging.Logger;
 
-public class HowManyItems implements ClientModInitializer, KeyBindingRegister, PacketRegister {
+import static net.glasslauncher.hmifabric.Utils.hiddenItems;
+
+public class HowManyItems implements StationMod, ClientModInitializer, KeyBindingRegister, PacketRegister {
 
     public static Logger logger = Logger.getLogger(HowManyItems.class.getName());
 
@@ -226,9 +234,9 @@ public class HowManyItems implements ClientModInitializer, KeyBindingRegister, P
     private static final ArrayList<Tab> modTabs = new ArrayList<>();
 
     @Override
-    public void onInitializeClient() {
+    public void init() {
         KeyBindingRegister.EVENT.register(this);
-        PacketRegister.EVENT.register(this, FabricLoader.getInstance().getModContainer("hmifabric").get().getMetadata());
+        PacketRegister.EVENT.register(this, getModID());
         try {
             fill = Utils.getMethod(DrawableHelper.class, new String[] {"fill", "method_1932"}, new Class<?>[] {int.class, int.class, int.class, int.class, int.class});
         } catch (Exception e) {
@@ -236,7 +244,6 @@ public class HowManyItems implements ClientModInitializer, KeyBindingRegister, P
         }
         fill.setAccessible(true);
         thisMod = this;
-        Config.init();
     }
 
     public static void handleHandshake(PlayerBase playerBase, CustomData customData) {
@@ -246,5 +253,33 @@ public class HowManyItems implements ClientModInitializer, KeyBindingRegister, P
     @Override
     public void registerPackets(QuadConsumer<Integer, Boolean, Boolean, Class<? extends AbstractPacket>> quadConsumer, Map<String, BiConsumer<PlayerBase, CustomData>> map) {
         map.put("handshake", HowManyItems::handleHandshake);
+    }
+
+    @Override
+    public void onInitializeClient() {
+        Config.init();
+        hiddenItems.add(new ItemInstance(BlockBase.STILL_WATER));
+        hiddenItems.add(new ItemInstance(BlockBase.STILL_LAVA));
+        hiddenItems.add(new ItemInstance(BlockBase.BED));
+        hiddenItems.add(new ItemInstance(BlockBase.TALLGRASS));
+        hiddenItems.add(new ItemInstance(BlockBase.DEADBUSH));
+        hiddenItems.add(new ItemInstance(BlockBase.PISTON_HEAD));
+        hiddenItems.add(new ItemInstance(BlockBase.MOVING_PISTON));
+        hiddenItems.add(new ItemInstance(BlockBase.DOUBLE_STONE_SLAB));
+        hiddenItems.add(new ItemInstance(BlockBase.REDSTONE_DUST));
+        hiddenItems.add(new ItemInstance(BlockBase.CROPS));
+        hiddenItems.add(new ItemInstance(BlockBase.FARMLAND));
+        hiddenItems.add(new ItemInstance(BlockBase.FURNACE_LIT));
+        hiddenItems.add(new ItemInstance(BlockBase.STANDING_SIGN));
+        hiddenItems.add(new ItemInstance(BlockBase.DOOR_WOOD));
+        hiddenItems.add(new ItemInstance(BlockBase.WALL_SIGN));
+        hiddenItems.add(new ItemInstance(BlockBase.DOOR_IRON));
+        hiddenItems.add(new ItemInstance(BlockBase.REDSTONE_ORE_LIT));
+        hiddenItems.add(new ItemInstance(BlockBase.REDSTONE_TORCH));
+        hiddenItems.add(new ItemInstance(BlockBase.SUGAR_CANES));
+        hiddenItems.add(new ItemInstance(BlockBase.CAKE));
+        hiddenItems.add(new ItemInstance(BlockBase.REDSTONE_REPEATER));
+        hiddenItems.add(new ItemInstance(BlockBase.REDSTONE_REPEATER_LIT));
+        hiddenItems.add(new ItemInstance(BlockBase.LOCKED_CHEST));
     }
 }

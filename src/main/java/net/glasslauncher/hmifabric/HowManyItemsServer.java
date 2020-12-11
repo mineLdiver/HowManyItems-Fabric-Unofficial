@@ -20,8 +20,8 @@ import java.util.function.BiConsumer;
 
 public class HowManyItemsServer implements StationMod, PacketRegister {
     @Override
-    public void preInit() {
-        PacketRegister.EVENT.register(this, FabricLoader.getInstance().getModContainer("hmifabric").get().getMetadata());
+    public void init() {
+        PacketRegister.EVENT.register(this, getModID());
         HandleLogin.EVENT.register(((pendingConnection, handshakeC2S) -> {
             if (((StationHandshake) handshakeC2S).getMods().get("hmifabric") != null) {
                 CustomData customData = GeneralFactory.INSTANCE.newInst(CustomData.class, "hmifabric:handshake");

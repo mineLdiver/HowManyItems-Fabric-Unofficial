@@ -1,6 +1,6 @@
 package net.glasslauncher.hmifabric;
 
-import net.fabricmc.api.ClientModInitializer;
+import net.modificationstation.stationloader.api.common.mod.StationMod;
 import net.glasslauncher.hmifabric.tabs.Tab;
 import net.glasslauncher.hmifabric.tabs.TabCrafting;
 import net.glasslauncher.hmifabric.tabs.TabSmelting;
@@ -21,7 +21,7 @@ public class TabUtils {
 
 	private static Map<Class<? extends ContainerBase>, ItemInstance> guiToBlock = new HashMap<>();
 
-	public static void loadTabs(ArrayList<Tab> tabList, ClientModInitializer mod) {
+	public static void loadTabs(ArrayList<Tab> tabList, StationMod mod) {
 		workbenchTab = new TabCrafting(mod);
 		tabList.add(workbenchTab);
 		guiToBlock.put(Crafting.class, new ItemInstance(BlockBase.WORKBENCH));

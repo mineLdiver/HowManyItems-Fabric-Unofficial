@@ -1,6 +1,6 @@
 package net.glasslauncher.hmifabric.tabs;
 
-import net.fabricmc.api.ClientModInitializer;
+import net.modificationstation.stationloader.api.common.mod.StationMod;
 import net.glasslauncher.hmifabric.TabUtils;
 import net.minecraft.block.BlockBase;
 import net.minecraft.block.material.Material;
@@ -23,7 +23,7 @@ public class TabSmelting extends TabWithTexture {
 	private int metadata;
 	private boolean damagedFurnaceInput = false;
 	
-	public TabSmelting(ClientModInitializer tabCreator) {
+	public TabSmelting(StationMod tabCreator) {
 		this(tabCreator, new HashMap(), new ArrayList<>(), "/gui/furnace.png", BlockBase.FURNACE);
 		
 		recipesComplete = SmeltingRecipeRegistry.getInstance().getRecipes();
@@ -57,22 +57,22 @@ public class TabSmelting extends TabWithTexture {
         }
 	}
 	
-	public TabSmelting(ClientModInitializer tabCreator, Map recipes, ArrayList<ItemInstance> fuels, String texturePath, BlockBase tabBlock) {
+	public TabSmelting(StationMod tabCreator, Map recipes, ArrayList<ItemInstance> fuels, String texturePath, BlockBase tabBlock) {
 		this(tabCreator, recipes, fuels, texturePath, tabBlock, 0);
 	}
 	
-	public TabSmelting(ClientModInitializer tabCreator, Map recipes, ArrayList<ItemInstance> fuels, String texturePath, BlockBase tabBlock, int metadata) {
+	public TabSmelting(StationMod tabCreator, Map recipes, ArrayList<ItemInstance> fuels, String texturePath, BlockBase tabBlock, int metadata) {
 		this(tabCreator, 3, recipes, fuels, texturePath, 84, 56, 54, 15, tabBlock, metadata);
 	}
 	
-	public TabSmelting(ClientModInitializer tabCreator, int slotsPerRecipe, Map recipes, ArrayList<ItemInstance> fuels, String texturePath, int width, int height, int textureX, int textureY, BlockBase tabBlock, int metadata) {
+	public TabSmelting(StationMod tabCreator, int slotsPerRecipe, Map recipes, ArrayList<ItemInstance> fuels, String texturePath, int width, int height, int textureX, int textureY, BlockBase tabBlock, int metadata) {
 		this(tabCreator, slotsPerRecipe, texturePath, width, height, textureX, textureY, tabBlock, metadata);
 		
 		this.recipesComplete = recipes;
 		this.fuels = fuels;
 	}
 	
-	public TabSmelting(ClientModInitializer tabCreator, int slotsPerRecipe, String texturePath, int width, int height, int textureX, int textureY, BlockBase tabBlock, int metadata) {
+	public TabSmelting(StationMod tabCreator, int slotsPerRecipe, String texturePath, int width, int height, int textureX, int textureY, BlockBase tabBlock, int metadata) {
 		super(tabCreator, slotsPerRecipe, texturePath, width, height, 3, 3, textureX, textureY);
 		
 		this.tabBlock = tabBlock;
@@ -85,6 +85,7 @@ public class TabSmelting extends TabWithTexture {
 		equivalentCraftingStations.add(getTabItem());
 	}
 
+	@Override
 	public ItemInstance[][] getItems(int index, ItemInstance filter) {
 		ItemInstance[][] items = new ItemInstance[recipesPerPage][];
 		for(int j = 0; j < recipesPerPage; j++)
@@ -129,6 +130,7 @@ public class TabSmelting extends TabWithTexture {
 		return items;
 	}
 
+	@Override
 	public void updateRecipes(ItemInstance filter, Boolean getUses) {
 		recipes.clear();
 		updateRecipesWithoutClear(filter, getUses);
@@ -182,6 +184,7 @@ public class TabSmelting extends TabWithTexture {
     	size = recipes.size();
 	}
 
+	@Override
 	public ItemInstance getTabItem() {
 		return new ItemInstance(tabBlock, 1, metadata);
 	}

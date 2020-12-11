@@ -24,6 +24,9 @@
     ],
     "client": [
       "net.glasslauncher.hmifabric.HowManyItems"
+    ],
+    "stationmod_client": [
+      "net.glasslauncher.hmifabric.HowManyItems"
     ]
   },
   "mixins": [
