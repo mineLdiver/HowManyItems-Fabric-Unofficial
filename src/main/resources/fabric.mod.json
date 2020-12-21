@@ -19,13 +19,13 @@
 
   "environment": "*",
   "entrypoints": {
-    "stationmod_server": [
+    "stationloader:mod_server": [
       "net.glasslauncher.hmifabric.HowManyItemsServer"
     ],
     "client": [
       "net.glasslauncher.hmifabric.HowManyItems"
     ],
-    "stationmod_client": [
+    "stationloader:mod_client": [
       "net.glasslauncher.hmifabric.HowManyItems"
     ]
   },
