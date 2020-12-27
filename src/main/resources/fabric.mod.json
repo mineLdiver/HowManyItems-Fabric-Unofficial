@@ -19,13 +19,13 @@
 
   "environment": "*",
   "entrypoints": {
-    "stationloader:mod_server": [
+    "stationapi:mod_server": [
       "net.glasslauncher.hmifabric.HowManyItemsServer"
     ],
     "client": [
       "net.glasslauncher.hmifabric.HowManyItems"
     ],
-    "stationloader:mod_client": [
+    "stationapi:mod_client": [
       "net.glasslauncher.hmifabric.HowManyItems"
     ]
   },
@@ -34,11 +34,11 @@
   ],
 
   "custom": {
-    "stationloader:verify_client": false
+    "stationapi:verify_client": false
   },
 
   "depends": {
     "minecraft": "1.0.0-beta.7.3",
-    "stationloader": "*"
+    "stationapi": "*"
   }
 }

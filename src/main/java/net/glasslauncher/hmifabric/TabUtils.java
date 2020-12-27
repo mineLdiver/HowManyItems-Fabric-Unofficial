@@ -1,6 +1,6 @@
 package net.glasslauncher.hmifabric;
 
-import net.modificationstation.stationloader.api.common.mod.StationMod;
+import net.modificationstation.stationapi.api.common.mod.StationMod;
 import net.glasslauncher.hmifabric.tabs.Tab;
 import net.glasslauncher.hmifabric.tabs.TabCrafting;
 import net.glasslauncher.hmifabric.tabs.TabSmelting;

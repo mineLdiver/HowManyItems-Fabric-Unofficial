@@ -19,10 +19,10 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
 import net.minecraft.level.LevelProperties;
 import net.minecraft.util.CharacterUtils;
-import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
-import net.modificationstation.stationloader.api.common.packet.Message;
-import net.modificationstation.stationloader.api.common.packet.PacketHelper;
-import net.modificationstation.stationloader.api.common.registry.Identifier;
+import net.modificationstation.stationapi.api.common.factory.GeneralFactory;
+import net.modificationstation.stationapi.api.common.packet.Message;
+import net.modificationstation.stationapi.api.common.packet.PacketHelper;
+import net.modificationstation.stationapi.api.common.registry.Identifier;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 

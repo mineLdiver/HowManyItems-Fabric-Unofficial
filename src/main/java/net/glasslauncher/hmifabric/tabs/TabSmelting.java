@@ -1,6 +1,6 @@
 package net.glasslauncher.hmifabric.tabs;
 
-import net.modificationstation.stationloader.api.common.mod.StationMod;
+import net.modificationstation.stationapi.api.common.mod.StationMod;
 import net.glasslauncher.hmifabric.TabUtils;
 import net.minecraft.block.BlockBase;
 import net.minecraft.block.material.Material;
