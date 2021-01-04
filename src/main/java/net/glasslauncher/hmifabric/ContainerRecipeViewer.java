@@ -1,16 +1,10 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
-
 package net.glasslauncher.hmifabric;
 
 import net.minecraft.container.ContainerBase;
 import net.minecraft.container.slot.Slot;
 import net.minecraft.entity.player.PlayerBase;
 
-// Referenced classes of package net.minecraft.src:
-//            Container, IInventory, Slot, EntityPlayer, 
-//            ItemStack
+
 
 public class ContainerRecipeViewer extends ContainerBase
 {
