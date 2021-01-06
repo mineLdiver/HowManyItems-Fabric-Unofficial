@@ -71,7 +71,7 @@ public class GuiRecipeViewer extends ContainerBase
 		for (Tab tab : HowManyItems.getTabs()) {
 			boolean tabMatchesBlock = false;
 			for(ItemInstance tabBlock : tab.equivalentCraftingStations) {
-				if(tabBlock.isEqualIgnoreFlags(itemstack)) {
+				if(tabBlock.isDamageAndIDIdentical(itemstack)) {
 					tabMatchesBlock = true;
 					tab.updateRecipes(null, false);
 					break;
@@ -91,7 +91,7 @@ public class GuiRecipeViewer extends ContainerBase
 		}
 		if(inv.filter.isEmpty() || getUses != inv.prevGetUses.peek() ||
 				(itemstack == null && inv.filter.peek() != null) || (itemstack != null && inv.filter.peek() == null) ||
-				(itemstack.itemId != inv.filter.peek().itemId || (itemstack.getDamage() != inv.filter.peek().getDamage() && itemstack.method_719())))
+				(itemstack.itemId != inv.filter.peek().itemId || (itemstack.getDamage() != inv.filter.peek().getDamage() && itemstack.usesMeta())))
     	{
 
     		inv.newList = true;

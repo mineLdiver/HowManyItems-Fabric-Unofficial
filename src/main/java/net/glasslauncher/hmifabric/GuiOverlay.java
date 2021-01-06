@@ -279,7 +279,7 @@ public class GuiOverlay extends ScreenBase {
 					}
 				}
 				else if(hiddenItems.contains(hoverItem)) {
-					if(shiftHeld && hoverItem.method_719()) {
+					if(shiftHeld && hoverItem.usesMeta()) {
 						s = "Unhide all items with same ID and higher dmg";
 					}
 					else {
@@ -287,7 +287,7 @@ public class GuiOverlay extends ScreenBase {
 					}
 				}
 				else {
-					if(shiftHeld && hoverItem.method_719()) {
+					if(shiftHeld && hoverItem.usesMeta()) {
 						s = "Hide all items with same ID and higher dmg";
 					}
 					else {
@@ -404,13 +404,13 @@ public class GuiOverlay extends ScreenBase {
 					if(eventButton == 0 || eventButton == 1) {
 						if(!minecraft.level.isClient) {
 							ItemInstance spawnedItem = hoverItem.copy();
-							if(eventButton == 0) spawnedItem.count = hoverItem.method_709();
+							if(eventButton == 0) spawnedItem.count = hoverItem.getMaxStackSize();
 							else spawnedItem.count = 1;
-							minecraft.player.inventory.method_671(spawnedItem);
+							minecraft.player.inventory.addStack(spawnedItem);
 						}
 						else if (Config.isHMIServer) {
 							ItemInstance spawnedItem = hoverItem.copy();
-							if(eventButton == 0) spawnedItem.count = hoverItem.method_709();
+							if(eventButton == 0) spawnedItem.count = hoverItem.getMaxStackSize();
 							else spawnedItem.count = 1;
 							Message customData = new Message(Identifier.of("hmifabric:giveItem"));
 							customData.put(new int[] {spawnedItem.itemId, spawnedItem.count, spawnedItem.getDamage()});
@@ -424,7 +424,7 @@ public class GuiOverlay extends ScreenBase {
 							messageformat.setFormatByArgumentIndex(2, numberformat);
 							messageformat.setFormatByArgumentIndex(3, numberformat);
 							Object aobj[] = {
-								minecraft.player.name, hoverItem.itemId, (eventButton == 0) ? hoverItem.method_709() : 1, Integer.valueOf(hoverItem.getDamage())
+								minecraft.player.name, hoverItem.itemId, (eventButton == 0) ? hoverItem.getMaxStackSize() : 1, Integer.valueOf(hoverItem.getDamage())
 							};
 							minecraft.player.sendChatMessage(messageformat.format((aobj)));
 						}
@@ -597,7 +597,7 @@ public class GuiOverlay extends ScreenBase {
 					for(int i = 0; i < screen.container.slots.size(); i++)
                     {
                         Slot slot = (Slot)screen.container.slots.get(i);
-                        if(slot.hasItem() && slot.getItem().isEqualIgnoreFlags(minecraft.player.inventory.getCursorItem()))
+                        if(slot.hasItem() && slot.getItem().isDamageAndIDIdentical(minecraft.player.inventory.getCursorItem()))
                         slot.setStack((ItemInstance)null);
                     }
 					deleteAllWaitUntil = System.currentTimeMillis() + 1000L;

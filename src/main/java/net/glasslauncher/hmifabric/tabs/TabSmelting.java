@@ -98,7 +98,7 @@ public class TabSmelting extends TabWithTexture {
             	for (int i = 0; i < recipe.length; i++) {
             		items[j][i] = recipe[i];
             		if (recipe[i] != null && recipe[i].getDamage() == -1) {
-                    	if (recipe[i].method_719()) {
+                    	if (recipe[i].usesMeta()) {
                     		if (filter != null && recipe[i].itemId == filter.itemId) {
                     			items[j][i] = new ItemInstance(recipe[i].getType(), 0, filter.getDamage());
                     		}
@@ -173,7 +173,7 @@ public class TabSmelting extends TabWithTexture {
 			}
 			if(filter == null ||
 					(getUses && input != null && input.itemId == filter.itemId ) ||
-					(!getUses && output.itemId == filter.itemId && (output.getDamage() == filter.getDamage() || output.getDamage() < 0 || !output.method_719())))
+					(!getUses && output.itemId == filter.itemId && (output.getDamage() == filter.getDamage() || output.getDamage() < 0 || !output.usesMeta())))
 			{
 				recipes.add(new ItemInstance[]{output, input});
             }

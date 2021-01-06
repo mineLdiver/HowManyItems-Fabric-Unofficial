@@ -78,7 +78,7 @@ public class Utils {
 		}
 		if(Config.showItemIDs && withID) {
 			s += " " + item.itemId;
-			if(item.method_719()) s+= ":" + item.getDamage();
+			if(item.usesMeta()) s+= ":" + item.getDamage();
 		}
 		return s;
 	}
@@ -116,7 +116,7 @@ public class Utils {
 	            {
 	                ItemInstance itemstack = new ItemInstance(item, 1, dmg);
 	                for(ItemInstance hiddenItem : GuiOverlay.hiddenItems) {
-	                	if(itemstack.isEqualIgnoreFlags(hiddenItem)) {
+	                	if(itemstack.isDamageAndIDIdentical(hiddenItem)) {
 	                		itemstack = hiddenItem;
 	                		break;
 	                	}
@@ -154,12 +154,12 @@ public class Utils {
 	            if(irecipe != null && irecipe.getOutput() != null && irecipe.getOutput().getType() != null) {
 	            	ItemInstance itemstack = new ItemInstance(irecipe.getOutput().getType(), 1, irecipe.getOutput().getDamage());
 	                for(ItemInstance hiddenItem : GuiOverlay.hiddenItems) {
-	                	if(itemstack.isEqualIgnoreFlags(hiddenItem)) {
+	                	if(itemstack.isDamageAndIDIdentical(hiddenItem)) {
 	                		itemstack = hiddenItem;
 	                		break;
 	                	}
 	                }
-		            if(!itemstack.method_719()) {
+		            if(!itemstack.usesMeta()) {
 		            	continue recipeLoop;
 		            }
 		            addItemInOrder(allItems, itemstack);
@@ -173,7 +173,7 @@ public class Utils {
 	
 	public static void addItemInOrder(ArrayList<ItemInstance> itemList, ItemInstance itemstack) {
 		for(ItemInstance item : itemList) {
-			if(item.isEqualIgnoreFlags(itemstack)) {
+			if(item.isDamageAndIDIdentical(itemstack)) {
         		return;
         	}
         	if(item.itemId > itemstack.itemId || (item.itemId == itemstack.itemId && item.getDamage() > itemstack.getDamage())) {
