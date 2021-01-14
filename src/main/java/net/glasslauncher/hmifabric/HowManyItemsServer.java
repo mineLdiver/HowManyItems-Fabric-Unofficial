@@ -24,7 +24,7 @@ import java.util.function.BiConsumer;
 
 public class HowManyItemsServer implements StationMod, MessageListenerRegister {
     @Override
-    public void init() {
+    public void init(ModID modID) {
         MessageListenerRegister.EVENT.register(this, getModID());
         HandleLogin.EVENT.register(((pendingConnection, handshakeC2S) -> {
             if (((StationHandshake) handshakeC2S).getMods().get("hmifabric") != null) {

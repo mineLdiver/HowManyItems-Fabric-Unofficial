@@ -234,7 +234,7 @@ public class HowManyItems implements StationMod, ClientModInitializer, KeyBindin
     private static final ArrayList<Tab> modTabs = new ArrayList<>();
 
     @Override
-    public void init() {
+    public void init(ModID modID) {
         KeyBindingRegister.EVENT.register(this);
         MessageListenerRegister.EVENT.register(this, getModID());
         try {
