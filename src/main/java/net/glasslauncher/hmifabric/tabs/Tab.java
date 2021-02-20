@@ -1,14 +1,14 @@
 package net.glasslauncher.hmifabric.tabs;
 
-import java.util.ArrayList;
-
-import net.modificationstation.stationapi.api.common.mod.StationMod;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.item.ItemInstance;
+import net.modificationstation.stationapi.api.common.registry.ModID;
+
+import java.util.ArrayList;
 
 public abstract class Tab {
 	
-	public Tab(StationMod tabCreator, int slotsPerRecipe, int width, int height, int minPaddingX, int minPaddingY) {
+	public Tab(ModID tabCreator, int slotsPerRecipe, int width, int height, int minPaddingX, int minPaddingY) {
 		slots = new Integer[slotsPerRecipe][];
 		WIDTH = width;
 		HEIGHT = height;
@@ -49,7 +49,7 @@ public abstract class Tab {
 	public int autoX = 1;
 	public int autoY = 2;
 	
-	public final StationMod TAB_CREATOR;
+	public final ModID TAB_CREATOR;
 	
 	public Integer[][] slots;
 	

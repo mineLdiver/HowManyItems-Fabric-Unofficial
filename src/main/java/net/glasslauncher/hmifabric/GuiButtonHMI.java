@@ -1,12 +1,11 @@
 package net.glasslauncher.hmifabric;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widgets.Button;
 import net.minecraft.client.render.TextRenderer;
 import net.minecraft.item.ItemInstance;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
-
-import net.minecraft.client.Minecraft;
 
 public class GuiButtonHMI extends Button {
 	

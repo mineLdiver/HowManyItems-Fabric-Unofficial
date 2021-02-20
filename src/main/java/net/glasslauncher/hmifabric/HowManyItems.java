@@ -1,48 +1,44 @@
 package net.glasslauncher.hmifabric;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.ModInitializer;
-import net.minecraft.block.BlockBase;
-import net.modificationstation.stationapi.api.common.event.mod.PostInit;
-import net.modificationstation.stationapi.api.common.event.packet.MessageListenerRegister;
-import net.modificationstation.stationapi.api.common.mod.StationMod;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
+import net.glasslauncher.hmifabric.mixin.DrawableHelperAccessor;
 import net.glasslauncher.hmifabric.tabs.Tab;
+import net.minecraft.block.BlockBase;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ScreenBase;
 import net.minecraft.client.gui.screen.container.ContainerBase;
-import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.ScreenScaler;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
-import net.minecraft.packet.AbstractPacket;
 import net.modificationstation.stationapi.api.client.event.option.KeyBindingRegister;
-import net.modificationstation.stationapi.api.common.event.packet.PacketRegister;
+import net.modificationstation.stationapi.api.common.event.EventListener;
+import net.modificationstation.stationapi.api.common.event.packet.MessageListenerRegister;
+import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.common.packet.Message;
-import net.modificationstation.stationapi.api.common.packet.MessageListenerRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 import org.lwjgl.input.Mouse;
-import uk.co.benjiweber.expressions.functions.QuadConsumer;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 import static net.glasslauncher.hmifabric.Utils.hiddenItems;
 
-public class HowManyItems implements StationMod, ClientModInitializer, KeyBindingRegister, MessageListenerRegister {
+public class HowManyItems implements ClientModInitializer {
 
     public static Logger logger = Logger.getLogger(HowManyItems.class.getName());
 
-    private static Method fill;
+    @Entrypoint.ModID
+    private static ModID modID;
 
-    @Override
-    public void registerKeyBindings(List<KeyBinding> list) {
-        list.add(Config.toggleOverlay);
+    public GuiOverlay overlay;
+
+    @Entrypoint.Instance
+    public static HowManyItems thisMod;
+
+    @EventListener
+    public void registerKeyBindings(KeyBindingRegister event) {
+        event.keyBindings.add(Config.toggleOverlay);
     }
 
     //Use this if you are a making a mod that adds a tab
@@ -67,9 +63,6 @@ public class HowManyItems implements StationMod, ClientModInitializer, KeyBindin
     public static void addEquivalentFurnace(ItemInstance item) {
         TabUtils.addEquivalentFurnace(item);
     }
-
-    public GuiOverlay overlay;
-    public static HowManyItems thisMod;
 
     public static void onSettingChanged() {
         if(thisMod.overlay != null) thisMod.overlay.init();
@@ -204,7 +197,7 @@ public class HowManyItems implements StationMod, ClientModInitializer, KeyBindin
     public static void drawRect(int i, int j, int k, int l, int i1) {
         // This is not that slow. Its only getting the method with reflection that is slow.
         try {
-            fill.invoke(Utils.gui, i, j, k, l, i1);
+            ((DrawableHelperAccessor) Utils.gui).invokeFill(i, j, k, l, i1);
         } catch (Exception e) {
             logger.severe("Something went very wrong rendering a GUI!");
             e.printStackTrace();
@@ -215,7 +208,7 @@ public class HowManyItems implements StationMod, ClientModInitializer, KeyBindin
         if(tabs == null) {
             allTabs = new ArrayList<>();
 
-            TabUtils.loadTabs(allTabs, thisMod);
+            TabUtils.loadTabs(allTabs, modID);
 
             allTabs.addAll(modTabs);
             Config.readConfig();
@@ -233,26 +226,13 @@ public class HowManyItems implements StationMod, ClientModInitializer, KeyBindin
     public static ArrayList<Tab> allTabs;
     private static final ArrayList<Tab> modTabs = new ArrayList<>();
 
-    @Override
-    public void init(ModID modID) {
-        KeyBindingRegister.EVENT.register(this);
-        MessageListenerRegister.EVENT.register(this, getModID());
-        try {
-            fill = Utils.getMethod(DrawableHelper.class, new String[] {"fill", "method_1932"}, new Class<?>[] {int.class, int.class, int.class, int.class, int.class});
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        fill.setAccessible(true);
-        thisMod = this;
-    }
-
     public static void handleHandshake(PlayerBase playerBase, Message customData) {
         Config.isHMIServer = customData.booleans()[0];
     }
 
-    @Override
-    public void registerMessageListeners(MessageListenerRegistry messageListenerRegistry, ModID modID) {
-        messageListenerRegistry.registerValue(Identifier.of("hmifabric:handshake"), HowManyItems::handleHandshake);
+    @EventListener
+    public void registerMessageListeners(MessageListenerRegister messageListenerRegistry) {
+        messageListenerRegistry.registry.registerValue(Identifier.of("hmifabric:handshake"), HowManyItems::handleHandshake);
     }
 
     @Override
@@ -271,9 +251,9 @@ public class HowManyItems implements StationMod, ClientModInitializer, KeyBindin
         hiddenItems.add(new ItemInstance(BlockBase.FARMLAND));
         hiddenItems.add(new ItemInstance(BlockBase.FURNACE_LIT));
         hiddenItems.add(new ItemInstance(BlockBase.STANDING_SIGN));
-        hiddenItems.add(new ItemInstance(BlockBase.DOOR_WOOD));
+        hiddenItems.add(new ItemInstance(BlockBase.WOOD_DOOR));
         hiddenItems.add(new ItemInstance(BlockBase.WALL_SIGN));
-        hiddenItems.add(new ItemInstance(BlockBase.DOOR_IRON));
+        hiddenItems.add(new ItemInstance(BlockBase.IRON_DOOR));
         hiddenItems.add(new ItemInstance(BlockBase.REDSTONE_ORE_LIT));
         hiddenItems.add(new ItemInstance(BlockBase.REDSTONE_TORCH));
         hiddenItems.add(new ItemInstance(BlockBase.SUGAR_CANES));

@@ -1,6 +1,5 @@
 package net.glasslauncher.hmifabric;
 
-import net.modificationstation.stationapi.api.common.mod.StationMod;
 import net.glasslauncher.hmifabric.tabs.Tab;
 import net.glasslauncher.hmifabric.tabs.TabCrafting;
 import net.glasslauncher.hmifabric.tabs.TabSmelting;
@@ -9,6 +8,7 @@ import net.minecraft.client.gui.screen.container.ContainerBase;
 import net.minecraft.client.gui.screen.container.Crafting;
 import net.minecraft.client.gui.screen.container.Furnace;
 import net.minecraft.item.ItemInstance;
+import net.modificationstation.stationapi.api.common.registry.ModID;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +21,7 @@ public class TabUtils {
 
 	private static Map<Class<? extends ContainerBase>, ItemInstance> guiToBlock = new HashMap<>();
 
-	public static void loadTabs(ArrayList<Tab> tabList, StationMod mod) {
+	public static void loadTabs(ArrayList<Tab> tabList, ModID mod) {
 		workbenchTab = new TabCrafting(mod);
 		tabList.add(workbenchTab);
 		guiToBlock.put(Crafting.class, new ItemInstance(BlockBase.WORKBENCH));

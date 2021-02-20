@@ -1,13 +1,6 @@
 package net.glasslauncher.hmifabric;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.text.MessageFormat;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
-
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ScreenBase;
 import net.minecraft.client.gui.screen.container.ContainerBase;
 import net.minecraft.client.gui.widgets.Button;
@@ -19,14 +12,19 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
 import net.minecraft.level.LevelProperties;
 import net.minecraft.util.CharacterUtils;
-import net.modificationstation.stationapi.api.common.factory.GeneralFactory;
 import net.modificationstation.stationapi.api.common.packet.Message;
 import net.modificationstation.stationapi.api.common.packet.PacketHelper;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import net.minecraft.client.Minecraft;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.text.MessageFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 public class GuiOverlay extends ScreenBase {
 
@@ -91,7 +89,7 @@ public class GuiOverlay extends ScreenBase {
 		int k = (screen.width - xSize) / 2 + 1;
         int l = (screen.height - ySize) / 2;
         String search = "";
-		if (searchBox != null) search = searchBox.method_1876();
+		if (searchBox != null) search = searchBox.getText();
 		int searchBoxX = k + xSize + 1;
 		int searchBoxWidth = screen.width - k - xSize - BUTTON_HEIGHT - 2;
 		if(Config.centredSearchBar) {
@@ -100,7 +98,7 @@ public class GuiOverlay extends ScreenBase {
 		}
 		int id = 0;
 		searchBox = new GuiTextFieldHMI(screen, textManager, searchBoxX, screen.height - BUTTON_HEIGHT + 1, searchBoxWidth, BUTTON_HEIGHT - 4, search);
-		searchBox.method_1878((searchBoxWidth - 10) / 6);
+		searchBox.setMaxLength((searchBoxWidth - 10) / 6);
 		buttons.add(buttonOptions = new GuiButtonHMI(id++, searchBoxX + searchBoxWidth + 1, screen.height - BUTTON_HEIGHT - 1, BUTTON_HEIGHT, Config.cheatsEnabled ? 1 : 0, guiBlock));
 		buttons.add(buttonNextPage = new GuiButtonHMI(id++, screen.width - (screen.width - k - xSize) / 3, 0, (screen.width - k - xSize) / 3, BUTTON_HEIGHT, "Next"));
 		buttons.add(buttonPrevPage = new GuiButtonHMI(id++, k + xSize, 0, (screen.width - k - xSize) / 3, BUTTON_HEIGHT, "Prev"));
@@ -142,7 +140,7 @@ public class GuiOverlay extends ScreenBase {
 		{
 			((Button)buttons.get(kx)).render(minecraft, posX, posY);
 		}
-		searchBox.method_1883();
+		searchBox.draw();
 		
 		//DRAW ITEMS + TOOLTIPS
 		
@@ -396,7 +394,7 @@ public class GuiOverlay extends ScreenBase {
 
 		int canvasHeight = screen.height - BUTTON_HEIGHT * 2;
 		if(Config.centredSearchBar) canvasHeight += BUTTON_HEIGHT;
-		searchBox.method_1879(posX, posY, eventButton);
+		searchBox.mouseClicked(posX, posY, eventButton);
 		if(!showHiddenItems) {
 			if(hoverItem != null && minecraft.player.inventory.getCursorItem() == null) {
 				if(minecraft.player.inventory.getCursorItem() == null && Config.cheatsEnabled) {
@@ -614,7 +612,7 @@ public class GuiOverlay extends ScreenBase {
     {
 		if(!searchBoxFocused() && Config.fastSearch && !HowManyItems.keyHeldLastTick) {
 			if(!Utils.keyEquals(i, minecraft.options.inventoryKey) && !Utils.keyEquals(i, Config.allRecipes) && !Utils.keyEquals(i, Config.toggleOverlay)
-					&& (CharacterUtils.validCharacters.indexOf(c) >= 0 || (i == Keyboard.KEY_BACK && searchBox.method_1876().length() > 0))) {
+					&& (CharacterUtils.validCharacters.indexOf(c) >= 0 || (i == Keyboard.KEY_BACK && searchBox.getText().length() > 0))) {
 				ScreenScaler scaledresolution = new ScreenScaler(minecraft.options, minecraft.actualWidth, minecraft.actualHeight);
 				int i2 = scaledresolution.getScaledWidth();
 				int j2 = scaledresolution.getScaledHeight();
@@ -623,7 +621,7 @@ public class GuiOverlay extends ScreenBase {
 				if((Utils.hoveredItem(screen, posX, posY) == null && hoverItem == null) || (!Utils.keyEquals(i, Config.pushRecipe) && !Utils.keyEquals(i, Config.pushUses))){
 					if(!(screen instanceof GuiRecipeViewer) || !Utils.keyEquals(i, Config.prevRecipe))
 						if(System.currentTimeMillis() > lastKeyTimeout)
-					searchBox.field_2420 = true;
+					searchBox.setSelected(true);
 				}
         	}
         }
@@ -631,20 +629,20 @@ public class GuiOverlay extends ScreenBase {
         	Keyboard.enableRepeatEvents(true);
         	if(i == Keyboard.KEY_ESCAPE) {
         		Keyboard.enableRepeatEvents(false);
-        		searchBox.method_1881(false);
+        		searchBox.setSelected(false);
         	}
-			else searchBox.method_1877(c, i);
-        	if(searchBox.method_1876().length() > lastSearch.length()) {
+			else searchBox.keyPressed(c, i);
+        	if(searchBox.getText().length() > lastSearch.length()) {
 				prevSearches.push(currentItems);
 				currentItems = getCurrentList(currentItems);
-			}else if(searchBox.method_1876().length() == 0) {
+			}else if(searchBox.getText().length() == 0) {
 				resetItems();
 			}
-			else if(searchBox.method_1876().length() < lastSearch.length()) {
+			else if(searchBox.getText().length() < lastSearch.length()) {
 				if(prevSearches.isEmpty()) currentItems = getCurrentList(Utils.itemList());
 				else currentItems = prevSearches.pop();
 			}
-			lastSearch = searchBox.method_1876();
+			lastSearch = searchBox.getText();
         }
         else {
         	Keyboard.enableRepeatEvents(false);
@@ -721,7 +719,7 @@ public class GuiOverlay extends ScreenBase {
     }
 	
 	public static boolean searchBoxFocused() {
-		if(searchBox != null) return searchBox.field_2420;
+		if(searchBox != null) return searchBox.selected;
 		return false;
 	}
 
@@ -783,10 +781,10 @@ public class GuiOverlay extends ScreenBase {
 
 	public static void clearSearchBox() {
 		if(searchBox != null) {
-			boolean wasFocused = searchBox.field_2420;
-			searchBox.field_2420 = true;
-			searchBox.method_1880("");
-			searchBox.field_2420 = wasFocused;
+			boolean wasFocused = searchBox.selected;
+			searchBox.setSelected(true);
+			searchBox.setText("");
+			searchBox.setSelected(wasFocused);
 			currentItems = getCurrentList(Utils.itemList());
 			prevSearches.clear();
 		}
@@ -795,10 +793,10 @@ public class GuiOverlay extends ScreenBase {
 	private static ArrayList<ItemInstance> getCurrentList(ArrayList<ItemInstance> listToSearch){
 		index = 0;
 		ArrayList<ItemInstance> newList = new ArrayList<>();
-		if(searchBox != null && searchBox.method_1876().length() > 0) {
+		if(searchBox != null && searchBox.getText().length() > 0) {
 			for(ItemInstance currentItem : listToSearch) {
 				String s = (TranslationStorage.getInstance().method_995(currentItem.getTranslationKey()));
-				if(s.toLowerCase().contains(searchBox.method_1876().toLowerCase()) && (showHiddenItems || !hiddenItems.contains(currentItem)) && (Config.devMode || !Utils.getNiceItemName(currentItem).endsWith("null"))) {
+				if(s.toLowerCase().contains(searchBox.getText().toLowerCase()) && (showHiddenItems || !hiddenItems.contains(currentItem)) && (Config.devMode || !Utils.getNiceItemName(currentItem).endsWith("null"))) {
 					newList.add(currentItem);
 				}
 			}
@@ -835,7 +833,7 @@ public class GuiOverlay extends ScreenBase {
 					button.visible = false;
 				}
 			}
-			searchBox.field_2421 = Config.overlayEnabled;
+			searchBox.enabled = Config.overlayEnabled;
 		}
 		if(!Config.overlayEnabled) {
 			Utils.getMC().currentScreen = screen;
@@ -846,7 +844,7 @@ public class GuiOverlay extends ScreenBase {
 
 	public static void focusSearchBox() {
 		if(searchBox != null) {
-			if(searchBox.field_2420 = true) {
+			if(searchBox.selected) {
 				Keyboard.enableRepeatEvents(false);
 			}
 		}
@@ -854,7 +852,7 @@ public class GuiOverlay extends ScreenBase {
 	
 	public static boolean emptySearchBox() {
 		if(searchBox != null) {
-			return searchBox.method_1876().length() == 0;
+			return searchBox.getText().length() == 0;
 		}
 		return false;
 	}
@@ -870,7 +868,7 @@ public class GuiOverlay extends ScreenBase {
         }
         else if(Mouse.isButtonDown(0) || Mouse.isButtonDown(1)) {
         	//used to unfocus search box by clicking off it
-    		searchBox.method_1879(posX, posY, Mouse.getEventButton());
+    		searchBox.mouseClicked(posX, posY, Mouse.getEventButton());
 		}
         handleKeyInput();
 		Utils.postRender();

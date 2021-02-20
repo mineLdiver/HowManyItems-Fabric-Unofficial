@@ -4,40 +4,34 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Item;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
-import net.minecraft.packet.AbstractPacket;
 import net.minecraft.server.MinecraftServer;
+import net.modificationstation.stationapi.api.common.event.EventListener;
 import net.modificationstation.stationapi.api.common.event.packet.MessageListenerRegister;
-import net.modificationstation.stationapi.api.common.event.packet.PacketRegister;
-import net.modificationstation.stationapi.api.common.factory.GeneralFactory;
-import net.modificationstation.stationapi.api.common.mod.StationMod;
+import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.common.packet.Message;
-import net.modificationstation.stationapi.api.common.packet.MessageListenerRegistry;
 import net.modificationstation.stationapi.api.common.packet.PacketHelper;
 import net.modificationstation.stationapi.api.common.packet.StationHandshake;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 import net.modificationstation.stationapi.api.server.event.network.HandleLogin;
-import uk.co.benjiweber.expressions.functions.QuadConsumer;
 
-import java.util.Map;
-import java.util.function.BiConsumer;
+public class HowManyItemsServer {
 
-public class HowManyItemsServer implements StationMod, MessageListenerRegister {
-    @Override
-    public void init(ModID modID) {
-        MessageListenerRegister.EVENT.register(this, getModID());
-        HandleLogin.EVENT.register(((pendingConnection, handshakeC2S) -> {
-            if (((StationHandshake) handshakeC2S).getMods().get("hmifabric") != null) {
-                Message customData = new Message(Identifier.of("hmifabric:handshake"));
-                customData.put(new boolean[]{true});
-                PacketHelper.INSTANCE.sendTo(((MinecraftServer) FabricLoader.getInstance().getGameInstance()).serverPlayerConnectionManager.getServerPlayer(handshakeC2S.username), customData);
-            }
-        }));
+    @Entrypoint.ModID
+    private static ModID modID;
+
+    @EventListener
+    public void handleLogin(HandleLogin event) {
+        if (((StationHandshake) event.handshakePacket).getMods().get("hmifabric") != null) {
+            Message customData = new Message(Identifier.of("hmifabric:handshake"));
+            customData.put(new boolean[]{true});
+            PacketHelper.INSTANCE.sendTo(((MinecraftServer) FabricLoader.getInstance().getGameInstance()).serverPlayerConnectionManager.getServerPlayer(event.handshakePacket.username), customData);
+        }
     }
 
-    @Override
-    public void registerMessageListeners(MessageListenerRegistry messageListenerRegistry, ModID modID) {
-        messageListenerRegistry.registerValue(Identifier.of(modID, "giveItem"), HowManyItemsServer::handleGivePacket);
+    @EventListener
+    public void registerMessageListeners(MessageListenerRegister event) {
+        event.registry.registerValue(Identifier.of(modID, "giveItem"), HowManyItemsServer::handleGivePacket);
     }
 
     public static void handleGivePacket(PlayerBase player, Message packet) {

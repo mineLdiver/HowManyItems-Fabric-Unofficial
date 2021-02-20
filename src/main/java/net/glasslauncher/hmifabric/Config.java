@@ -1,19 +1,14 @@
 package net.glasslauncher.hmifabric;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-
 import net.glasslauncher.hmifabric.tabs.Tab;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.item.ItemInstance;
 import org.lwjgl.input.Keyboard;
 
-import net.minecraft.client.Minecraft;
+import java.io.*;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 public class Config {
 

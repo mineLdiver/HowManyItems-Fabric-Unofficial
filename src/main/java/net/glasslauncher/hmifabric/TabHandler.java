@@ -1,13 +1,13 @@
 package net.glasslauncher.hmifabric;
 
-import java.util.ArrayList;
-
-import net.modificationstation.stationapi.api.common.mod.StationMod;
 import net.minecraft.item.ItemInstance;
+import net.modificationstation.stationapi.api.common.registry.ModID;
+
+import java.util.ArrayList;
 
 public abstract class TabHandler {
 
-	public abstract void loadTabs(StationMod basemod);
+	public abstract void loadTabs(ModID basemod);
 	
 	public void registerItems(ArrayList<ItemInstance> itemList) { }
 }

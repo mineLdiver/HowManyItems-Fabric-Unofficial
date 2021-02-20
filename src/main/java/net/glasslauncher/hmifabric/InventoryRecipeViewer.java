@@ -1,11 +1,11 @@
 package net.glasslauncher.hmifabric;
 
-import java.util.Stack;
-
 import net.glasslauncher.hmifabric.tabs.Tab;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.inventory.InventoryBase;
 import net.minecraft.item.ItemInstance;
+
+import java.util.Stack;
 
 
 

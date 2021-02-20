@@ -1,10 +1,5 @@
 package net.glasslauncher.hmifabric.tabs;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import net.modificationstation.stationapi.api.common.mod.StationMod;
 import net.glasslauncher.hmifabric.Utils;
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.ClientInteractionManager;
@@ -21,19 +16,24 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeRegistry;
 import net.minecraft.recipe.ShapedRecipe;
 import net.minecraft.recipe.ShapelessRecipe;
+import net.modificationstation.stationapi.api.common.registry.ModID;
 import org.lwjgl.input.Keyboard;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class TabCrafting extends TabWithTexture {
 
 	protected List recipesComplete;
 	protected List recipes;
 	private int slotsWidth;
-	protected StationMod mod;
+	protected ModID mod;
 	private BlockBase tabBlock;
 	private boolean isVanillaWorkbench = false; //THIS IS LAZY
 	public ArrayList<Class<? extends ContainerBase>> guiCraftingStations = new ArrayList<>();
 	
-	public TabCrafting(StationMod tabCreator) {
+	public TabCrafting(ModID tabCreator) {
 		this(tabCreator, new ArrayList(RecipeRegistry.getInstance().getRecipes()), BlockBase.WORKBENCH);
 		for (int i = 0; i < recipesComplete.size(); i++) {
 			//Removes recipes that are too big and ruin everything @flans mod
@@ -47,12 +47,12 @@ public class TabCrafting extends TabWithTexture {
 		guiCraftingStations.add(Crafting.class);
 	}
 	
-	public TabCrafting(StationMod tabCreator, List recipesComplete, BlockBase tabBlock) {
+	public TabCrafting(ModID tabCreator, List recipesComplete, BlockBase tabBlock) {
 		this(tabCreator, 10, recipesComplete, tabBlock, "/gui/crafting.png", 118, 56, 28, 15, 56, 46, 3);
 		slots[0] = new Integer[]{96, 23};
 	}
 
-	public TabCrafting(StationMod tabCreator, int slotsPerRecipe, List recipesComplete, BlockBase tabBlock, String texturePath, int width, int height, int textureX, int textureY, int buttonX, int buttonY, int slotsWidth) {
+	public TabCrafting(ModID tabCreator, int slotsPerRecipe, List recipesComplete, BlockBase tabBlock, String texturePath, int width, int height, int textureX, int textureY, int buttonX, int buttonY, int slotsWidth) {
 		super(tabCreator, slotsPerRecipe, texturePath, width, height, 3, 4, textureX, textureY, buttonX, buttonY);
 		this.slotsWidth = slotsWidth;
 		this.recipesComplete = recipesComplete;

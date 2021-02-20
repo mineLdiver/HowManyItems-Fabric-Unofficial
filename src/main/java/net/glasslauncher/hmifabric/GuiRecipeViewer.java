@@ -1,8 +1,5 @@
 package net.glasslauncher.hmifabric;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-
 import net.glasslauncher.hmifabric.tabs.Tab;
 import net.glasslauncher.hmifabric.tabs.TabWithTexture;
 import net.minecraft.client.gui.screen.ScreenBase;
@@ -13,6 +10,9 @@ import net.minecraft.client.util.ScreenScaler;
 import net.minecraft.item.ItemInstance;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 
 

@@ -1,7 +1,5 @@
 package net.glasslauncher.hmifabric;
 
-import java.util.ArrayList;
-
 import net.glasslauncher.hmifabric.tabs.Tab;
 import net.minecraft.client.gui.screen.ScreenBase;
 import net.minecraft.client.gui.widgets.Button;
@@ -10,6 +8,8 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.resource.language.TranslationStorage;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
 
 public class GuiTabOrder extends ScreenBase
 {

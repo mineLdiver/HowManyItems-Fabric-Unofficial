@@ -1,18 +1,8 @@
 package net.glasslauncher.hmifabric;
 
-import java.io.File;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-
 import net.fabricmc.loader.api.FabricLoader;
 import net.glasslauncher.hmifabric.tabs.Tab;
-import net.minecraft.block.BlockBase;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.container.ContainerBase;
 import net.minecraft.client.options.KeyBinding;
@@ -27,7 +17,11 @@ import net.minecraft.recipe.RecipeRegistry;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.Minecraft;
+import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.*;
 
 public class Utils {
 	private static ArrayList<ItemInstance> allItems;

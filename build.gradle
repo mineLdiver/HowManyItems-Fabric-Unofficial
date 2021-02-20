@@ -12,7 +12,7 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath 'com.github.Chocohead:Fabric-Loom:bbaa5d7'
+		classpath 'com.github.Chocohead:Fabric-Loom:e3d1762'
 	}
 }
 
@@ -84,7 +84,10 @@ dependencies {
 
 	modImplementation "com.github.minecraft-cursed-legacy:cursed-fabric-loader:${project.loader_version}"
 
-	modImplementation "com.github.ModificationStation:StationAPI:660082a:dev"
+	modImplementation "com.github.ModificationStation:StationAPI:${project.stapi_version}"
+
+	// stapi = :bin:
+	compile "com.github.benjiman:expressions:7ed6748"
 }
 
 processResources {
@@ -139,6 +142,13 @@ publishing {
 			artifact ("${project.buildDir.absolutePath}/libs/${archivesBaseName}-${project.version}-dev.jar") {
 				classifier 'dev'
 				builtBy remapJar
+			}
+			pom.withXml {
+				asNode().dependencies.dependency.each { dep ->
+					if(dep.artifactId.last().value().last().toLowerCase() in ["fabric-loader", "stationapi"]) {
+						assert dep.parent().remove(dep)
+					}
+				}
 			}
 		}
 	}
