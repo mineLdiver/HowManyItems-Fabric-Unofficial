@@ -8,7 +8,7 @@ import net.minecraft.client.gui.screen.container.ContainerBase;
 import net.minecraft.client.gui.screen.container.Crafting;
 import net.minecraft.client.gui.screen.container.Furnace;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.common.registry.ModID;
+import net.modificationstation.stationapi.api.registry.ModID;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -3,6 +3,7 @@ package net.glasslauncher.hmifabric;
 import net.fabricmc.api.ClientModInitializer;
 import net.glasslauncher.hmifabric.mixin.DrawableHelperAccessor;
 import net.glasslauncher.hmifabric.tabs.Tab;
+import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ScreenBase;
@@ -10,13 +11,12 @@ import net.minecraft.client.gui.screen.container.ContainerBase;
 import net.minecraft.client.util.ScreenScaler;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.client.event.option.KeyBindingRegister;
-import net.modificationstation.stationapi.api.common.event.EventListener;
-import net.modificationstation.stationapi.api.common.event.packet.MessageListenerRegister;
-import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
-import net.modificationstation.stationapi.api.common.packet.Message;
-import net.modificationstation.stationapi.api.common.registry.Identifier;
-import net.modificationstation.stationapi.api.common.registry.ModID;
+import net.modificationstation.stationapi.api.client.event.option.KeyBindingRegisterEvent;
+import net.modificationstation.stationapi.api.event.registry.MessageListenerRegistryEvent;
+import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.packet.Message;
+import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.ModID;
 import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class HowManyItems implements ClientModInitializer {
     public static HowManyItems thisMod;
 
     @EventListener
-    public void registerKeyBindings(KeyBindingRegister event) {
+    public void registerKeyBindings(KeyBindingRegisterEvent event) {
         event.keyBindings.add(Config.toggleOverlay);
     }
 
@@ -227,13 +227,13 @@ public class HowManyItems implements ClientModInitializer {
     private static final ArrayList<Tab> modTabs = new ArrayList<>();
 
     public static void handleHandshake(PlayerBase playerBase, Message customData) {
-        Config.isHMIServer = customData.booleans()[0];
+        Config.isHMIServer = customData.booleans[0];
     }
 
-    @EventListener
-    public void registerMessageListeners(MessageListenerRegister messageListenerRegistry) {
-        messageListenerRegistry.registry.registerValue(Identifier.of("hmifabric:handshake"), HowManyItems::handleHandshake);
-    }
+//    @EventListener
+//    public void registerMessageListeners(MessageListenerRegistryEvent messageListenerRegistry) {
+//        messageListenerRegistry.registry.register(Identifier.of("hmifabric:handshake"), HowManyItems::handleHandshake);
+//    }
 
     @Override
     public void onInitializeClient() {

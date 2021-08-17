@@ -5,7 +5,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.SmeltingRecipeRegistry;
-import net.modificationstation.stationapi.api.common.registry.ModID;
+import net.modificationstation.stationapi.api.registry.ModID;
 
 import java.util.ArrayList;
 import java.util.HashMap;

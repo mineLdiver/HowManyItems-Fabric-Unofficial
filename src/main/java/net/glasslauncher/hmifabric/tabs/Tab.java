@@ -2,7 +2,7 @@ package net.glasslauncher.hmifabric.tabs;
 
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.common.registry.ModID;
+import net.modificationstation.stationapi.api.registry.ModID;
 
 import java.util.ArrayList;
 

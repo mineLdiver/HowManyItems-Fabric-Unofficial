@@ -3,7 +3,7 @@ package net.glasslauncher.hmifabric.tabs;
 import net.glasslauncher.hmifabric.Utils;
 import net.minecraft.client.gui.screen.ScreenBase;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.common.registry.ModID;
+import net.modificationstation.stationapi.api.registry.ModID;
 
 public abstract class TabWithTexture extends Tab {
 

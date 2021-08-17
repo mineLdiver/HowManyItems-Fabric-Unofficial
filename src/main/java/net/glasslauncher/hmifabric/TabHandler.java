@@ -1,7 +1,7 @@
 package net.glasslauncher.hmifabric;
 
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.common.registry.ModID;
+import net.modificationstation.stationapi.api.registry.ModID;
 
 import java.util.ArrayList;
 

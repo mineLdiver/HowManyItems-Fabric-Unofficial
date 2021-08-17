@@ -16,7 +16,7 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeRegistry;
 import net.minecraft.recipe.ShapedRecipe;
 import net.minecraft.recipe.ShapelessRecipe;
-import net.modificationstation.stationapi.api.common.registry.ModID;
+import net.modificationstation.stationapi.api.registry.ModID;
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;

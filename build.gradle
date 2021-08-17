@@ -1,11 +1,11 @@
 buildscript {
 	repositories {
-		mavenCentral()
-		jcenter()
 		maven {
 			name = "Fabric"
 			url = "https://maven.fabricmc.net/"
 		}
+		mavenCentral()
+		jcenter()
 		maven {
 			name = "Jitpack"
 			url 'https://jitpack.io/'
@@ -86,8 +86,11 @@ dependencies {
 
 	modImplementation "com.github.ModificationStation:StationAPI:${project.stapi_version}"
 
-	// stapi = :bin:
-	compile "com.github.benjiman:expressions:7ed6748"
+	implementation "com.github.mineLdiver:UnsafeEvents:7efec57"
+
+	implementation "com.github.jhalterman:typetools:87240d6"
+
+	implementation "com.github.mineLdiver:expressions:2fa66db"
 }
 
 processResources {

@@ -3,7 +3,7 @@ package net.glasslauncher.hmifabric.tabs;
 import net.glasslauncher.hmifabric.Utils;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.common.registry.ModID;
+import net.modificationstation.stationapi.api.registry.ModID;
 
 import java.util.ArrayList;
 import java.util.Arrays;

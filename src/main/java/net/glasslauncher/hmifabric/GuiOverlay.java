@@ -12,9 +12,9 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
 import net.minecraft.level.LevelProperties;
 import net.minecraft.util.CharacterUtils;
-import net.modificationstation.stationapi.api.common.packet.Message;
-import net.modificationstation.stationapi.api.common.packet.PacketHelper;
-import net.modificationstation.stationapi.api.common.registry.Identifier;
+import net.modificationstation.stationapi.api.packet.Message;
+import net.modificationstation.stationapi.api.packet.PacketHelper;
+import net.modificationstation.stationapi.api.registry.Identifier;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -411,8 +411,8 @@ public class GuiOverlay extends ScreenBase {
 							if(eventButton == 0) spawnedItem.count = hoverItem.getMaxStackSize();
 							else spawnedItem.count = 1;
 							Message customData = new Message(Identifier.of("hmifabric:giveItem"));
-							customData.put(new int[] {spawnedItem.itemId, spawnedItem.count, spawnedItem.getDamage()});
-							PacketHelper.INSTANCE.send(customData);
+							customData.ints = new int[] {spawnedItem.itemId, spawnedItem.count, spawnedItem.getDamage()};
+							PacketHelper.send(customData);
 						}
 						else if(Config.mpGiveCommand.length() > 0) {
 							NumberFormat numberformat = NumberFormat.getIntegerInstance();
