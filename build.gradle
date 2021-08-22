@@ -48,6 +48,16 @@ repositories {
 	}
 }
 
+task moveRemappedSrc {
+	if (project.name.equals("station-api"))
+		return
+	doLast {
+		delete './src/main/java/'
+		ant.move file: './remappedSrc/net',
+				todir: './src/main/java/'
+	}
+}
+
 minecraft {
 }
 

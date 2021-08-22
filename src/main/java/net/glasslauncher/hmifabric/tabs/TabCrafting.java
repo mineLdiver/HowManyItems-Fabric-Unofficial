@@ -2,7 +2,7 @@ package net.glasslauncher.hmifabric.tabs;
 
 import net.glasslauncher.hmifabric.Utils;
 import net.minecraft.block.BlockBase;
-import net.minecraft.client.ClientInteractionManager;
+import net.minecraft.client.BaseClientInteractionManager;
 import net.minecraft.client.gui.screen.ScreenBase;
 import net.minecraft.client.gui.screen.container.ContainerBase;
 import net.minecraft.client.gui.screen.container.Crafting;
@@ -408,12 +408,12 @@ public class TabCrafting extends TabWithTexture {
 		
 	}
 	
-	ClientInteractionManager inv;
+	BaseClientInteractionManager inv;
 	AbstractClientPlayer player;
 	int windowId;
 	
 	void clickSlot(int slotIndex, boolean leftClick, boolean shiftClick) {
-		inv.method_1708(windowId, slotIndex, leftClick ? 0 : 1, shiftClick, player);
+		inv.clickSlot(windowId, slotIndex, leftClick ? 0 : 1, shiftClick, player);
 	}
 	
 	boolean isInv(ScreenBase screen) {
