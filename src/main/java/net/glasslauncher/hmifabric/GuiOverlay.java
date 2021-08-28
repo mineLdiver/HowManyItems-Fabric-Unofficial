@@ -501,6 +501,7 @@ public class GuiOverlay extends ScreenBase {
 	protected void buttonClicked(Button guibutton)
     {
 		boolean shiftHeld = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
+		boolean ctrlHeld = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
 		if(guibutton == buttonNextPage) {
 			incIndex();
 		}
@@ -515,6 +516,10 @@ public class GuiOverlay extends ScreenBase {
 				else {
 					HowManyItems.pushTabBlock(screen, guiBlock);
 				}
+			}
+			else if (ctrlHeld) {
+				Config.cheatsEnabled = !Config.cheatsEnabled;
+				init();
 			}
 			else {
 				minecraft.openScreen(new GuiOptionsHMI(screen));
