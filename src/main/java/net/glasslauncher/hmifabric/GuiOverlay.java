@@ -803,7 +803,7 @@ public class GuiOverlay extends ScreenBase {
 		}
 		else if(showHiddenItems) {
 			for(ItemInstance currentItem : Utils.itemList()) {
-				if(Config.devMode || !currentItem.getTranslationKey().endsWith("null")) {
+				if(Config.devMode || !(currentItem.getTranslationKey() == null || currentItem.getTranslationKey().endsWith("null"))) {
 					newList.add(currentItem);
 				}
 			}
