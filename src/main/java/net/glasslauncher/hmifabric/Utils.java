@@ -98,55 +98,48 @@ public class Utils {
 ;			allItems = new ArrayList<>();
 			
 			ItemBase[] mcItemsList = ItemBase.byId;
-	        for(int j = 0; j < mcItemsList.length; j++)
+			for (ItemBase item : mcItemsList) {
+				if (item == null) {
+					continue;
+				}
+				HashSet<String> currentItemNames = new HashSet<>();
+				for (int dmg = 0; ; dmg++) {
+					ItemInstance itemstack = new ItemInstance(item, 1, dmg);
+					for (ItemInstance hiddenItem : GuiOverlay.hiddenItems) {
+						if (itemstack.isDamageAndIDIdentical(hiddenItem)) {
+							itemstack = hiddenItem;
+							break;
+						}
+					}
+					try {
+						int l = item.getTexturePosition(itemstack);
+						String s = TranslationStorage.getInstance().method_995(itemstack.getTranslationKey());
+						if (s.length() == 0) s = itemstack.getTranslationKey() + "@" + l;
+						if (dmg >= 4 && (s.contains(String.valueOf(dmg)) || s.contains(String.valueOf(dmg + 1)) || s.contains(String.valueOf(dmg - 1)))) {
+							break;
+						}
+						s = s + "@" + l;
+						//System.out.println(s);
+						if (!currentItemNames.contains(s)) {
+							allItems.add(itemstack);
+							currentItemNames.add(s);
+							continue;
+						} else {
+							break;
+						}
+					} catch (NullPointerException | IndexOutOfBoundsException ignored) {
+					}
+					break;
+				}
+			}
+
+			//This field should *only* ever contain things that implement Recipe, so this cast is fine.
+			//noinspection unchecked
+			List<Recipe> recipes = (List<Recipe>)RecipeRegistry.getInstance().getRecipes();
+	        for (Recipe recipe : recipes)
 	        {
-	            ItemBase item = mcItemsList[j];
-	            if(item == null)
-	            {
-	                continue;
-	            }
-	            HashSet<String> currentItemNames = new HashSet<>();
-	            for(int dmg = 0;; dmg++)
-	            {
-	                ItemInstance itemstack = new ItemInstance(item, 1, dmg);
-	                for(ItemInstance hiddenItem : GuiOverlay.hiddenItems) {
-	                	if(itemstack.isDamageAndIDIdentical(hiddenItem)) {
-	                		itemstack = hiddenItem;
-	                		break;
-	                	}
-	                }
-	                try
-	                {
-	                    int l = item.getTexturePosition(itemstack);
-	                    String s = TranslationStorage.getInstance().method_995(itemstack.getTranslationKey());
-	                    if(s.length() == 0) s = itemstack.getTranslationKey() + "@" + l;
-	                    if(dmg >= 4 && (s.contains(String.valueOf(dmg)) || s.contains(String.valueOf(dmg + 1)) || s.contains(String.valueOf(dmg - 1)))){
-	                    	break;
-	                    }
-	                    s = s + "@" + l;
-	                    //System.out.println(s);
-	                    if(!currentItemNames.contains(s))
-	                    {
-	                        allItems.add(itemstack);
-	                        currentItemNames.add(s);
-	                        continue;
-	                    }
-	                    else {
-	                    	break;
-	                    }
-	                }
-	                catch(NullPointerException nullpointerexception) { }
-	                catch(IndexOutOfBoundsException indexoutofboundsexception) { }
-	                break;
-	            }
-	        }
-	        
-	        List recipes = RecipeRegistry.getInstance().getRecipes();
-	        recipeLoop : for(Iterator iterator = recipes.iterator(); iterator.hasNext();)
-	        {
-	            Recipe irecipe = (Recipe)iterator.next();
-	            if(irecipe != null && irecipe.getOutput() != null && irecipe.getOutput().getType() != null) {
-	            	ItemInstance itemstack = new ItemInstance(irecipe.getOutput().getType(), 1, irecipe.getOutput().getDamage());
+	            if(recipe != null && recipe.getOutput() != null && recipe.getOutput().getType() != null) {
+	            	ItemInstance itemstack = new ItemInstance(recipe.getOutput().getType(), 1, recipe.getOutput().getDamage());
 	                for(ItemInstance hiddenItem : GuiOverlay.hiddenItems) {
 	                	if(itemstack.isDamageAndIDIdentical(hiddenItem)) {
 	                		itemstack = hiddenItem;
@@ -154,7 +147,7 @@ public class Utils {
 	                	}
 	                }
 		            if(!itemstack.usesMeta()) {
-		            	continue recipeLoop;
+		            	continue;
 		            }
 		            addItemInOrder(allItems, itemstack);
 	            }
