@@ -1,5 +1,14 @@
 # Changelog
 
+## [5.0.3]
+- Added control-clicking the settings button to toggle cheat mode.
+- Removed meta giving in MP temporarily.
+- Updated to latest StAPI (pre2).
+
+## [5.0.2]
+- Added meta giving in MP.
+- Updated to latest StAPI (pre1).
+
 ## [v5.0.0] - 2020/10/12
 - Ported to fabric.
 - Mod no longer crashes servers when installed on them, but does nothing when installed on a server.
