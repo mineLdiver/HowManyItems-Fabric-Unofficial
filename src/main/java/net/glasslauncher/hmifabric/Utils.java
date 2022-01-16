@@ -29,6 +29,7 @@ public class Utils {
 	public static ItemRenderer itemRenderer = new ItemRenderer();
 	public static Random rand = new Random();
 	public static DrawableHelper gui = new DrawableHelper();
+	@SuppressWarnings("deprecation")
 	public static Minecraft getMC() { return (Minecraft) FabricLoader.getInstance().getGameInstance();}
 	
 	private static final List<String> loadedResources = new ArrayList<>();
@@ -37,10 +38,10 @@ public class Utils {
 	
 	//clean mine_diver code
 	//Used for easy reflection with obfuscated or regular fields
-	public static final Field getField(Class<?> target, String names[]) {
+	public static Field getField(Class<?> target, String names[]) {
 		for (Field field : target.getDeclaredFields()) {
 			for (String name : names) {
-				if (field.getName() == name) {
+				if (field.getName().equals(name)) {
 					field.setAccessible(true);
 					return field;
 				}
@@ -51,7 +52,7 @@ public class Utils {
 	
 	//clean mine_diver code
 	//Used for easy reflection with obfuscated or regular methods
-	public static final Method getMethod(Class<?> target, String names[], Class<?> types[]) {
+	public static Method getMethod(Class<?> target, String names[], Class<?> types[]) {
 		for (String name : names) {
 			try {
 				Method method = target.getDeclaredMethod(name, types);
@@ -359,7 +360,7 @@ public class Utils {
 	public static void logError(String... lines) {
 		System.out.println("HMI ERROR: " + lines[0]);
 		for (String message : lines) {
-			if(message == lines[0]) continue;
+			if(Objects.equals(message, lines[0])) continue;
 			System.out.println('\t' + message);
 		}
 	}
@@ -420,7 +421,7 @@ public class Utils {
 		public EasyField(Class<?> target, String... names) {
 			for (Field field : target.getDeclaredFields()) {
 				for (String name : names) {
-					if (field.getName() == name) {
+					if (field.getName().equals(name)) {
 						field.setAccessible(true);
 						this.field = field;
 						return;
