@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class GuiRecipeViewer extends ContainerBase
 {
-	private static Field xSizeField = Utils.getField(ContainerBase.class, new String[] {"containerWidth", "a"});
+	private static Field xSizeField = Utils.getField(ContainerBase.class, new String[] {"field_1152", "containerWidth", "a"});
 
 	public GuiRecipeViewer(ItemInstance itemstack, Boolean getUses, ScreenBase parent)
     {
