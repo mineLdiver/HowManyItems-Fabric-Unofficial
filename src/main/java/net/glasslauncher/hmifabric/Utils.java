@@ -71,7 +71,7 @@ public class Utils {
 			s = item.getTranslationKey();
 			if(s == null) s = "null";
 		}
-		if(Config.showItemIDs && withID) {
+		if(Config.config.showItemIDs && withID) {
 			s += " " + item.itemId;
 			if(item.usesMeta()) s+= ":" + item.getDamage();
 		}

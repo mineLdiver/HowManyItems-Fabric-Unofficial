@@ -18,8 +18,7 @@ public class MixinContainerBase {
     private void keyPressed(char character, int key, CallbackInfo ci) {
         if (Keyboard.getEventKey() == Config.toggleOverlay.key && Utils.keybindValid(Config.toggleOverlay)) {
             if (Utils.isGuiOpen(ContainerBase.class) && !GuiOverlay.searchBoxFocused()) {
-                Config.overlayEnabled = !Config.overlayEnabled;
-                Config.writeConfig();
+                Config.config.overlayEnabled = !Config.config.overlayEnabled;
                 if (HowManyItems.thisMod.overlay != null) HowManyItems.thisMod.overlay.toggle();
             }
         }

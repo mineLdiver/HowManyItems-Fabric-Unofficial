@@ -92,25 +92,25 @@ public class GuiOverlay extends ScreenBase {
 		if (searchBox != null) search = searchBox.getText();
 		int searchBoxX = k + xSize + 1;
 		int searchBoxWidth = screen.width - k - xSize - BUTTON_HEIGHT - 2;
-		if(Config.centredSearchBar) {
+		if(Config.config.centredSearchBar) {
 			searchBoxX -= xSize;
 			searchBoxWidth = xSize - BUTTON_HEIGHT - 3;
 		}
 		int id = 0;
 		searchBox = new GuiTextFieldHMI(screen, textManager, searchBoxX, screen.height - BUTTON_HEIGHT + 1, searchBoxWidth, BUTTON_HEIGHT - 4, search);
 		searchBox.setMaxLength((searchBoxWidth - 10) / 6);
-		buttons.add(buttonOptions = new GuiButtonHMI(id++, searchBoxX + searchBoxWidth + 1, screen.height - BUTTON_HEIGHT - 1, BUTTON_HEIGHT, Config.cheatsEnabled ? 1 : 0, guiBlock));
+		buttons.add(buttonOptions = new GuiButtonHMI(id++, searchBoxX + searchBoxWidth + 1, screen.height - BUTTON_HEIGHT - 1, BUTTON_HEIGHT, Config.config.cheatsEnabled ? 1 : 0, guiBlock));
 		buttons.add(buttonNextPage = new GuiButtonHMI(id++, screen.width - (screen.width - k - xSize) / 3, 0, (screen.width - k - xSize) / 3, BUTTON_HEIGHT, "Next"));
 		buttons.add(buttonPrevPage = new GuiButtonHMI(id++, k + xSize, 0, (screen.width - k - xSize) / 3, BUTTON_HEIGHT, "Prev"));
-		if(Config.cheatsEnabled) {
+		if(Config.config.cheatsEnabled) {
 			boolean mp = minecraft.level.isClient;
-			if(!mp || !Config.mpTimeDayCommand.isEmpty()) 
+			if(!mp || !Config.config.mpTimeDayCommand.isEmpty())
 				buttons.add(buttonTimeDay = new GuiButtonHMI(id++, 0, 0, BUTTON_HEIGHT, 12));
-			if(!mp || !Config.mpTimeNightCommand.isEmpty()) 
+			if(!mp || !Config.config.mpTimeNightCommand.isEmpty())
 				buttons.add(buttonTimeNight = new GuiButtonHMI(id++, BUTTON_HEIGHT, 0, BUTTON_HEIGHT, 13));
-			if(!mp || !Config.mpRainOFFCommand.isEmpty() || !Config.mpRainONCommand.isEmpty()) 
+			if(!mp || !Config.config.mpRainOFFCommand.isEmpty() || !Config.config.mpRainONCommand.isEmpty())
 				buttons.add(buttonToggleRain = new GuiButtonHMI(id++, BUTTON_HEIGHT * 2, 0, BUTTON_HEIGHT, 14));
-			if(!mp || !Config.mpHealCommand.isEmpty()) 
+			if(!mp || !Config.config.mpHealCommand.isEmpty())
 				buttons.add(buttonHeal = new GuiButtonHMI(id++, BUTTON_HEIGHT * 3, 0, BUTTON_HEIGHT, 15));
 			if(!mp) 
 				buttons.add(buttonTrash = new GuiButtonHMI(id++, 0, screen.height - BUTTON_HEIGHT - 1, 60, BUTTON_HEIGHT, "Trash"));
@@ -126,7 +126,7 @@ public class GuiOverlay extends ScreenBase {
 			}
 		}
 		else {
-			buttonOptions.iconIndex = Config.cheatsEnabled ? 1 : 0;
+			buttonOptions.iconIndex = Config.config.cheatsEnabled ? 1 : 0;
 			if(buttonTrash != null) {
 				buttonTrash.text = "Trash";
 			}
@@ -149,7 +149,7 @@ public class GuiOverlay extends ScreenBase {
 		Boolean itemHovered = false;
 		PlayerInventory inventoryplayer = minecraft.player.inventory;
 		int canvasHeight = screen.height - BUTTON_HEIGHT * 2;
-		if(Config.centredSearchBar) canvasHeight += BUTTON_HEIGHT;
+		if(Config.config.centredSearchBar) canvasHeight += BUTTON_HEIGHT;
 		for(int i = index; i < currentItems.size(); i++) {
 			if((x + 1) * 18 > w) {
 				y++;
@@ -294,7 +294,7 @@ public class GuiOverlay extends ScreenBase {
 				}
 			}
 		}
-		else if(Config.cheatsEnabled && inventoryplayer.getCursorItem() != null && (hoverItem != null || (posX > k + (w % 18)/2 && posY > screen.height - BUTTON_HEIGHT + (canvasHeight % 18) /2 - canvasHeight
+		else if(Config.config.cheatsEnabled && inventoryplayer.getCursorItem() != null && (hoverItem != null || (posX > k + (w % 18)/2 && posY > screen.height - BUTTON_HEIGHT + (canvasHeight % 18) /2 - canvasHeight
 				&& posX < screen.width - (w % 18)/2 && posY > BUTTON_HEIGHT + (canvasHeight % 18) /2  && posY < BUTTON_HEIGHT + canvasHeight)))
 		{
 			s = "Delete " + Utils.getNiceItemName(inventoryplayer.getCursorItem());
@@ -311,23 +311,23 @@ public class GuiOverlay extends ScreenBase {
 				s = "View All Recipes";
 			}
 		}
-		else if(Config.cheatsEnabled && !minecraft.level.isClient && buttonTimeDay.isMouseOver(minecraft, posX, posY))
+		else if(Config.config.cheatsEnabled && !minecraft.level.isClient && buttonTimeDay.isMouseOver(minecraft, posX, posY))
 		{
 			s = "Set time to day";
 		}
-		else if(Config.cheatsEnabled && !minecraft.level.isClient && buttonTimeNight.isMouseOver(minecraft, posX, posY))
+		else if(Config.config.cheatsEnabled && !minecraft.level.isClient && buttonTimeNight.isMouseOver(minecraft, posX, posY))
 		{
 			s = "Set time to night";
 		}
-		else if(Config.cheatsEnabled && !minecraft.level.isClient && buttonToggleRain.isMouseOver(minecraft, posX, posY))
+		else if(Config.config.cheatsEnabled && !minecraft.level.isClient && buttonToggleRain.isMouseOver(minecraft, posX, posY))
 		{
 			s = "Toggle rain";
 		}
-		else if(Config.cheatsEnabled && !minecraft.level.isClient && buttonHeal.isMouseOver(minecraft, posX, posY))
+		else if(Config.config.cheatsEnabled && !minecraft.level.isClient && buttonHeal.isMouseOver(minecraft, posX, posY))
 		{
 			s = "Heal";
 		}
-		else if(Config.cheatsEnabled && !minecraft.level.isClient && buttonTrash.isMouseOver(minecraft, posX, posY))
+		else if(Config.config.cheatsEnabled && !minecraft.level.isClient && buttonTrash.isMouseOver(minecraft, posX, posY))
 		{
 			if(inventoryplayer.getCursorItem() == null) {
 				if(shiftHeld) {
@@ -370,7 +370,7 @@ public class GuiOverlay extends ScreenBase {
 			if(s.length() == 0) {
 				Utils.drawTooltip(Utils.getNiceItemName(item), k1, i2);
 			}
-			else if(Config.showItemIDs) {
+			else if(Config.config.showItemIDs) {
 				s = " " + item.itemId;
 				/*if(item.method_719())*/ s+= ":" + item.getDamage();
 				if (item.getType().hasDurability()) s+= "/" + item.getType().getDurability();
@@ -393,11 +393,11 @@ public class GuiOverlay extends ScreenBase {
 		int w = screen.width - (screen.width - xSize) / 2 - xSize - 1;
 
 		int canvasHeight = screen.height - BUTTON_HEIGHT * 2;
-		if(Config.centredSearchBar) canvasHeight += BUTTON_HEIGHT;
+		if(Config.config.centredSearchBar) canvasHeight += BUTTON_HEIGHT;
 		searchBox.mouseClicked(posX, posY, eventButton);
 		if(!showHiddenItems) {
 			if(hoverItem != null && minecraft.player.inventory.getCursorItem() == null) {
-				if(minecraft.player.inventory.getCursorItem() == null && Config.cheatsEnabled) {
+				if(minecraft.player.inventory.getCursorItem() == null && Config.config.cheatsEnabled) {
 
 					if(eventButton == 0 || eventButton == 1) {
 						if(!minecraft.level.isClient) {
@@ -414,10 +414,10 @@ public class GuiOverlay extends ScreenBase {
 							customData.ints = new int[] {spawnedItem.itemId, spawnedItem.count, spawnedItem.getDamage()};
 							PacketHelper.send(customData);
 						}
-						else if(Config.mpGiveCommand.length() > 0) {
+						else if(Config.config.mpGiveCommand.length() > 0) {
 							NumberFormat numberformat = NumberFormat.getIntegerInstance();
 							numberformat.setGroupingUsed(false);
-							MessageFormat messageformat = new MessageFormat(Config.mpGiveCommand);
+							MessageFormat messageformat = new MessageFormat(Config.config.mpGiveCommand);
 							messageformat.setFormatByArgumentIndex(1, numberformat);
 							messageformat.setFormatByArgumentIndex(2, numberformat);
 							messageformat.setFormatByArgumentIndex(3, numberformat);
@@ -462,7 +462,7 @@ public class GuiOverlay extends ScreenBase {
 			}
 		}
 		if((minecraft.player.inventory.getCursorItem() != null && !minecraft.level.isClient && (hoverItem != null || (posX > k + (w % 18)/2 && posY > screen.height - BUTTON_HEIGHT + (canvasHeight % 18) /2 - canvasHeight
-				&& posX < screen.width - (w % 18)/2 && posY > BUTTON_HEIGHT + (canvasHeight % 18) /2  && posY < BUTTON_HEIGHT + canvasHeight))) && Config.cheatsEnabled) {
+				&& posX < screen.width - (w % 18)/2 && posY > BUTTON_HEIGHT + (canvasHeight % 18) /2  && posY < BUTTON_HEIGHT + canvasHeight))) && Config.config.cheatsEnabled) {
 			if(eventButton == 0) {
 				minecraft.player.inventory.setCursorItem(null);
 			}
@@ -470,7 +470,7 @@ public class GuiOverlay extends ScreenBase {
 				minecraft.player.inventory.setCursorItem(minecraft.player.inventory.getCursorItem().split(minecraft.player.inventory.getCursorItem().count - 1));
 			}
 		}
-		else if(Config.cheatsEnabled && !minecraft.level.isClient && buttonTrash.isMouseOver(minecraft, posX, posY) && minecraft.player.inventory.getCursorItem() != null && eventButton == 1) {
+		else if(Config.config.cheatsEnabled && !minecraft.level.isClient && buttonTrash.isMouseOver(minecraft, posX, posY) && minecraft.player.inventory.getCursorItem() != null && eventButton == 1) {
 			minecraft.soundHelper.playSound("random.click", 1.0F, 1.0F);
 			if(minecraft.player.inventory.getCursorItem().count > 1) {
 				minecraft.player.inventory.setCursorItem(minecraft.player.inventory.getCursorItem().split(minecraft.player.inventory.getCursorItem().count - 1));
@@ -518,7 +518,7 @@ public class GuiOverlay extends ScreenBase {
 				}
 			}
 			else if (ctrlHeld) {
-				Config.cheatsEnabled = !Config.cheatsEnabled;
+				Config.config.cheatsEnabled = !Config.config.cheatsEnabled;
 				init();
 			}
 			else {
@@ -548,19 +548,19 @@ public class GuiOverlay extends ScreenBase {
 			}
 			else {
 				if(guibutton == buttonTimeDay) {
-					minecraft.player.sendChatMessage(Config.mpTimeDayCommand);
+					minecraft.player.sendChatMessage(Config.config.mpTimeDayCommand);
 				}
 				else if(guibutton == buttonTimeNight) {
-					minecraft.player.sendChatMessage(Config.mpTimeNightCommand);
+					minecraft.player.sendChatMessage(Config.config.mpTimeNightCommand);
 				}
 				else if(guibutton == buttonToggleRain) {
 					try {
 						LevelProperties worldInfo = (LevelProperties)worldInfoField.get(minecraft.level);
 						if(worldInfo.isRaining()) {
-							minecraft.player.sendChatMessage(Config.mpRainOFFCommand);
+							minecraft.player.sendChatMessage(Config.config.mpRainOFFCommand);
 						}
 						else {
-							minecraft.player.sendChatMessage(Config.mpRainONCommand);
+							minecraft.player.sendChatMessage(Config.config.mpRainONCommand);
 						}
 					} 
 					catch (IllegalArgumentException e) { e.printStackTrace(); } 
@@ -578,7 +578,7 @@ public class GuiOverlay extends ScreenBase {
 				}
 			}
 			else {
-				minecraft.player.sendChatMessage(Config.mpHealCommand);
+				minecraft.player.sendChatMessage(Config.config.mpHealCommand);
 			}
 		}
 		else if(!minecraft.level.isClient && guibutton == buttonTrash) {
@@ -615,7 +615,7 @@ public class GuiOverlay extends ScreenBase {
 	@Override
 	protected void keyPressed(char c, int i)
     {
-		if(!searchBoxFocused() && Config.fastSearch && !HowManyItems.keyHeldLastTick) {
+		if(!searchBoxFocused() && Config.config.fastSearch && !HowManyItems.keyHeldLastTick) {
 			if(!Utils.keyEquals(i, minecraft.options.inventoryKey) && !Utils.keyEquals(i, Config.allRecipes) && !Utils.keyEquals(i, Config.toggleOverlay)
 					&& (CharacterUtils.validCharacters.indexOf(c) >= 0 || (i == Keyboard.KEY_BACK && searchBox.getText().length() > 0))) {
 				ScreenScaler scaledresolution = new ScreenScaler(minecraft.options, minecraft.actualWidth, minecraft.actualHeight);
@@ -757,7 +757,7 @@ public class GuiOverlay extends ScreenBase {
     	int k = (screen.width - xSize) / 2 + xSize + 1;
     	if(posX > k) {
     		int i = Mouse.getEventDWheel();
-    		if(!Config.scrollInverted) {
+    		if(!Config.config.scrollInverted) {
     			if(i > 0) { incIndex(); }
                 if(i < 0) { decIndex(); }
     		}
@@ -801,21 +801,21 @@ public class GuiOverlay extends ScreenBase {
 		if(searchBox != null && searchBox.getText().length() > 0) {
 			for(ItemInstance currentItem : listToSearch) {
 				String s = (TranslationStorage.getInstance().method_995(currentItem.getTranslationKey()));
-				if(s.toLowerCase().contains(searchBox.getText().toLowerCase()) && (showHiddenItems || !hiddenItems.contains(currentItem)) && (Config.devMode || !Utils.getNiceItemName(currentItem).endsWith("null"))) {
+				if(s.toLowerCase().contains(searchBox.getText().toLowerCase()) && (showHiddenItems || !hiddenItems.contains(currentItem)) && (Config.config.devMode || !Utils.getNiceItemName(currentItem).endsWith("null"))) {
 					newList.add(currentItem);
 				}
 			}
 		}
 		else if(showHiddenItems) {
 			for(ItemInstance currentItem : Utils.itemList()) {
-				if(Config.devMode || !(currentItem.getTranslationKey() == null || currentItem.getTranslationKey().endsWith("null"))) {
+				if(Config.config.devMode || !(currentItem.getTranslationKey() == null || currentItem.getTranslationKey().endsWith("null"))) {
 					newList.add(currentItem);
 				}
 			}
 		}
 		else {
 			for(ItemInstance currentItem : Utils.itemList()) {
-				if(!hiddenItems.contains(currentItem) && (Config.devMode || !Utils.getNiceItemName(currentItem).endsWith("null"))) {
+				if(!hiddenItems.contains(currentItem) && (Config.config.devMode || !Utils.getNiceItemName(currentItem).endsWith("null"))) {
 					newList.add(currentItem);
 				}
 			}
@@ -830,21 +830,20 @@ public class GuiOverlay extends ScreenBase {
 		if(buttonNextPage != null) {
 			for(Object obj : buttons) {
 				Button button = (Button)obj;
-				if(Config.overlayEnabled) {
-					if(Config.cheatsEnabled) button.visible = true;
+				if(Config.config.overlayEnabled) {
+					if(Config.config.cheatsEnabled) button.visible = true;
 					else if(button == buttonNextPage || button == buttonPrevPage || button == buttonOptions) button.visible = true;
 				}
 				else {
 					button.visible = false;
 				}
 			}
-			searchBox.enabled = Config.overlayEnabled;
+			searchBox.enabled = Config.config.overlayEnabled;
 		}
-		if(!Config.overlayEnabled) {
+		if(!Config.config.overlayEnabled) {
 			Utils.getMC().currentScreen = screen;
 			hoverItem = null;
 		}
-		Config.writeConfig();
 	}
 
 	public static void focusSearchBox() {

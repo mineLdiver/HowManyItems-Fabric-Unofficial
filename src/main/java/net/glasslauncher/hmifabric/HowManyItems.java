@@ -11,7 +11,9 @@ import net.minecraft.client.gui.screen.container.ContainerBase;
 import net.minecraft.client.util.ScreenScaler;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
+import net.modificationstation.stationapi.api.client.event.network.MultiplayerLogoutEvent;
 import net.modificationstation.stationapi.api.client.event.option.KeyBindingRegisterEvent;
+import net.modificationstation.stationapi.api.event.entity.player.PlayerEvent;
 import net.modificationstation.stationapi.api.event.registry.MessageListenerRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.packet.Message;
@@ -66,13 +68,12 @@ public class HowManyItems implements ClientModInitializer {
 
     public static void onSettingChanged() {
         if(thisMod.overlay != null) thisMod.overlay.init();
-        Config.writeConfig();
     }
 
     public void onTickInGUI(Minecraft mc, ScreenBase guiscreen) {
         if(guiscreen instanceof ContainerBase) {
             ContainerBase screen = (ContainerBase)guiscreen;
-            if(Config.overlayEnabled) {
+            if(Config.config.overlayEnabled) {
                 if(GuiOverlay.screen != screen || overlay == null || screen.width != overlay.width || screen.height != overlay.height) {
                     overlay = new GuiOverlay(screen);
                 }
@@ -101,7 +102,7 @@ public class HowManyItems implements ClientModInitializer {
                         pushRecipe(guiscreen, newFilter, getUses);
                     }
                     else {
-                        if(Config.overlayEnabled && guiscreen == GuiOverlay.screen && !GuiOverlay.searchBoxFocused() && Config.fastSearch) {
+                        if(Config.config.overlayEnabled && guiscreen == GuiOverlay.screen && !GuiOverlay.searchBoxFocused() && Config.config.fastSearch) {
                             GuiOverlay.focusSearchBox();
                         }
                     }
@@ -113,7 +114,7 @@ public class HowManyItems implements ClientModInitializer {
                         ((GuiRecipeViewer) guiscreen).pop();
                     }
                     else {
-                        if(Config.overlayEnabled && guiscreen == GuiOverlay.screen && !GuiOverlay.searchBoxFocused() && Config.fastSearch)
+                        if(Config.config.overlayEnabled && guiscreen == GuiOverlay.screen && !GuiOverlay.searchBoxFocused() && Config.config.fastSearch)
                             if(!GuiOverlay.emptySearchBox()) GuiOverlay.focusSearchBox();
                     }
                 }
@@ -211,7 +212,6 @@ public class HowManyItems implements ClientModInitializer {
             TabUtils.loadTabs(allTabs, modID);
 
             allTabs.addAll(modTabs);
-            Config.readConfig();
             tabs = Config.orderTabs();
         }
         return tabs;
@@ -226,18 +226,18 @@ public class HowManyItems implements ClientModInitializer {
     public static ArrayList<Tab> allTabs;
     private static final ArrayList<Tab> modTabs = new ArrayList<>();
 
-    public static void handleHandshake(PlayerBase playerBase, Message customData) {
-        Config.isHMIServer = customData.booleans[0];
+    @EventListener
+    public void registerMessageListeners(MessageListenerRegistryEvent messageListenerRegistry) {
+        messageListenerRegistry.registry.register(Identifier.of("hmifabric:handshake"), (playerBase, message) -> Config.isHMIServer = message.booleans[0]);
     }
 
-//    @EventListener
-//    public void registerMessageListeners(MessageListenerRegistryEvent messageListenerRegistry) {
-//        messageListenerRegistry.registry.register(Identifier.of("hmifabric:handshake"), HowManyItems::handleHandshake);
-//    }
+    @EventListener
+    public void onLogout(MultiplayerLogoutEvent event) {
+        Config.isHMIServer = false;
+    }
 
     @Override
     public void onInitializeClient() {
-        Config.init();
         hiddenItems.add(new ItemInstance(BlockBase.STILL_WATER));
         hiddenItems.add(new ItemInstance(BlockBase.STILL_LAVA));
         hiddenItems.add(new ItemInstance(BlockBase.BED));

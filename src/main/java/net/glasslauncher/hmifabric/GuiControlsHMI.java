@@ -110,11 +110,11 @@ public class GuiControlsHMI extends ScreenBase {
     }
 	
 	private static KeyBinding[] binds = {
-			Config.pushRecipe, 
-			Config.pushUses, 
-			Config.prevRecipe, 
-			Config.allRecipes, 
-			Config.clearSearchBox, 
+			Config.pushRecipe,
+			Config.pushUses,
+			Config.prevRecipe,
+			Config.allRecipes,
+			Config.clearSearchBox,
 			Config.focusSearchBox,
 			Config.toggleOverlay
 			};

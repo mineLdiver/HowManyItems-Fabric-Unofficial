@@ -37,9 +37,9 @@ public class GuiRecipeViewer extends ContainerBase
     }
 
     public void init2() {
-		if(Config.recipeViewerDraggableGui) {
-	        containerWidth = Config.recipeViewerGuiWidth;
-	        containerHeight = Config.recipeViewerGuiHeight;
+		if(Config.config.recipeViewerDraggableGui) {
+	        containerWidth = Config.config.recipeViewerGuiWidth;
+	        containerHeight = Config.config.recipeViewerGuiHeight;
 		}
 		else {
 			if(parent instanceof ContainerBase) {
@@ -172,7 +172,7 @@ public class GuiRecipeViewer extends ContainerBase
     {
     	int i = Mouse.getEventDWheel();
     	//TODO if(mouse in gui bounds) {
-    	if(!Config.scrollInverted) {
+    	if(!Config.config.scrollInverted) {
 			if(i > 0) { inv.incIndex(); initButtons(); }
             if(i < 0) { inv.decIndex(); initButtons(); }
 		}
@@ -214,7 +214,7 @@ public class GuiRecipeViewer extends ContainerBase
     	}
     	else {
     		//Start dragging to change gui size
-        	if (Config.recipeViewerDraggableGui && (posX - containerWidth + 10 > x) && (posX - containerWidth - 4 < x)
+        	if (Config.config.recipeViewerDraggableGui && (posX - containerWidth + 10 > x) && (posX - containerWidth - 4 < x)
         			&& (posY - containerHeight + 10 > y) && (posY - containerHeight - 4 < y) && k == 0 && !dragging) {
         		dragging = true;
             }
@@ -585,7 +585,7 @@ public class GuiRecipeViewer extends ContainerBase
         Utils.bindTexture();
         Utils.disableLighting();
         //DRAW dragging indicator thing
-        if (Config.recipeViewerDraggableGui) {
+        if (Config.config.recipeViewerDraggableGui) {
             blit(x + containerWidth - 29, y + containerHeight - 29, 56, 169, 28, 28);
         }
 
@@ -661,10 +661,9 @@ public class GuiRecipeViewer extends ContainerBase
     @Override
     public void onClose()
     {
-    	if (Config.recipeViewerGuiWidth != containerWidth || Config.recipeViewerGuiHeight != containerHeight) {
-    		Config.recipeViewerGuiWidth = containerWidth;
-    		Config.recipeViewerGuiHeight = containerHeight;
-    		Config.writeConfig();
+    	if (Config.config.recipeViewerGuiWidth != containerWidth || Config.config.recipeViewerGuiHeight != containerHeight) {
+    		Config.config.recipeViewerGuiWidth = containerWidth;
+    		Config.config.recipeViewerGuiHeight = containerHeight;
     	}
         //super.onGuiClosed();
     }

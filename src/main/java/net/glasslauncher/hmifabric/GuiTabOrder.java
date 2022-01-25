@@ -82,7 +82,7 @@ public class GuiTabOrder extends ScreenBase
 		if(buttons.size() >= 3) ((Button)buttons.get(buttons.size() - 2)).active = false;
 		
 		TranslationStorage stringtranslate = TranslationStorage.getInstance();
-		buttons.add(new OptionButton(buttons.size(), width / 2 - 154, height - 39, "Gui Size: " + (Config.recipeViewerDraggableGui ? "Draggable" : "Auto")));
+		buttons.add(new OptionButton(buttons.size(), width / 2 - 154, height - 39, "Gui Size: " + (Config.config.recipeViewerDraggableGui ? "Draggable" : "Auto")));
         buttons.add(new OptionButton(buttons.size(), width / 2 + 4, height - 39, stringtranslate.translate("gui.done")));
 	}
 
@@ -98,8 +98,8 @@ public class GuiTabOrder extends ScreenBase
 			minecraft.openScreen(parentScreen);
 		}
 		else if(guibutton.id == buttons.size() - 2){
-			Config.recipeViewerDraggableGui = !Config.recipeViewerDraggableGui;
-        	guibutton.text = "Gui Size: " + (Config.recipeViewerDraggableGui ? "Draggable" : "Auto");
+			Config.config.recipeViewerDraggableGui = !Config.config.recipeViewerDraggableGui;
+        	guibutton.text = "Gui Size: " + (Config.config.recipeViewerDraggableGui ? "Draggable" : "Auto");
         	HowManyItems.onSettingChanged();
 		}
 		else {

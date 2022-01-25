@@ -24,6 +24,9 @@
     ],
     "stationapi:event_bus_client": [
       "net.glasslauncher.hmifabric.HowManyItems"
+    ],
+    "gcapi": [
+      "net.glasslauncher.hmifabric.Config"
     ]
   },
   "mixins": [

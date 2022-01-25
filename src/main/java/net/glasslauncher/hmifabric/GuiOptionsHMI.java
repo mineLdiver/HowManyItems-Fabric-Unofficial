@@ -28,13 +28,13 @@ public class GuiOptionsHMI extends ScreenBase {
 	public void init()
     {
         int i = -1;
-        buttons.add(buttonCheats = new OptionButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Mode: " + (Config.cheatsEnabled ? "Cheat Mode" : "Recipe Mode")));
-        buttons.add(buttonIDs = new OptionButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Item IDs: " + (Config.showItemIDs ? "ON" : "OFF")));
-        buttons.add(buttonCentredSearchBar = new OptionButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Centred Search Bar: " + (Config.centredSearchBar ? "ON" : "OFF")));
-        buttons.add(buttonFastSearch = new OptionButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Fast Search: " + (Config.fastSearch ? "ON" : "OFF")));
+        buttons.add(buttonCheats = new OptionButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Mode: " + (Config.config.cheatsEnabled ? "Cheat Mode" : "Recipe Mode")));
+        buttons.add(buttonIDs = new OptionButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Item IDs: " + (Config.config.showItemIDs ? "ON" : "OFF")));
+        buttons.add(buttonCentredSearchBar = new OptionButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Centred Search Bar: " + (Config.config.centredSearchBar ? "ON" : "OFF")));
+        buttons.add(buttonFastSearch = new OptionButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Fast Search: " + (Config.config.fastSearch ? "ON" : "OFF")));
         buttons.add(buttonHiding = new OptionButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Hide Items Mode: " + (GuiOverlay.showHiddenItems ? "ON" : "OFF")));
-        buttons.add(buttonInvertedScroll = new OptionButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Flip Scroll Direction: " + (Config.scrollInverted ? "ON" : "OFF")));
-        buttons.add(buttonDevMode = new OptionButton(++i, (width / 2 - (155/2)) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Enable Developer Mode: " + (Config.devMode ? "ON" : "OFF")));
+        buttons.add(buttonInvertedScroll = new OptionButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Flip Scroll Direction: " + (Config.config.scrollInverted ? "ON" : "OFF")));
+        buttons.add(buttonDevMode = new OptionButton(++i, (width / 2 - (155/2)) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Enable Developer Mode: " + (Config.config.devMode ? "ON" : "OFF")));
 
         //buttons.add(new Button(++i, width / 2 - 100, height / 6 + 72 + 12, "Commands & Loadout Names..."));
         buttons.add(buttonKeybinds = new Button(++i, width / 2 - 100, height / 6 + 96 + 12, "Keybinds..."));
@@ -48,23 +48,23 @@ public class GuiOptionsHMI extends ScreenBase {
     {
         if(guibutton == buttonCheats)
         {
-        	Config.cheatsEnabled = !Config.cheatsEnabled;
-        	buttonCheats.text = "Mode: " + (Config.cheatsEnabled ? "Cheat Mode" : "Recipe Mode");
+        	Config.config.cheatsEnabled = !Config.config.cheatsEnabled;
+        	buttonCheats.text = "Mode: " + (Config.config.cheatsEnabled ? "Cheat Mode" : "Recipe Mode");
         }
         else if(guibutton == buttonIDs)
         {
-        	Config.showItemIDs = !Config.showItemIDs;
-        	buttonIDs.text = "Item IDs: " + (Config.showItemIDs ? "ON" : "OFF");
+        	Config.config.showItemIDs = !Config.config.showItemIDs;
+        	buttonIDs.text = "Item IDs: " + (Config.config.showItemIDs ? "ON" : "OFF");
         }
         else if(guibutton == buttonCentredSearchBar)
         {
-        	Config.centredSearchBar = !Config.centredSearchBar;
-        	buttonCentredSearchBar.text = "Centred Search Bar: " + (Config.centredSearchBar ? "ON" : "OFF");
+        	Config.config.centredSearchBar = !Config.config.centredSearchBar;
+        	buttonCentredSearchBar.text = "Centred Search Bar: " + (Config.config.centredSearchBar ? "ON" : "OFF");
         }
         else if(guibutton == buttonFastSearch)
         {
-        	Config.fastSearch = !Config.fastSearch;
-        	buttonFastSearch.text = "Fast Search: " + (Config.fastSearch ? "ON" : "OFF");
+        	Config.config.fastSearch = !Config.config.fastSearch;
+        	buttonFastSearch.text = "Fast Search: " + (Config.config.fastSearch ? "ON" : "OFF");
         }
         else if(guibutton == buttonHiding)
         {
@@ -74,8 +74,8 @@ public class GuiOptionsHMI extends ScreenBase {
         }
         else if(guibutton == buttonInvertedScroll)
         {
-        	Config.scrollInverted = !Config.scrollInverted;
-        	buttonInvertedScroll.text = "Flip Scroll Direction: " + (Config.scrollInverted ? "ON" : "OFF");
+        	Config.config.scrollInverted = !Config.config.scrollInverted;
+        	buttonInvertedScroll.text = "Flip Scroll Direction: " + (Config.config.scrollInverted ? "ON" : "OFF");
         }
         else if(guibutton == buttonDone)
         {
@@ -95,9 +95,9 @@ public class GuiOptionsHMI extends ScreenBase {
         }
         else if(guibutton == buttonDevMode)
         {
-            Config.devMode = !Config.devMode;
+            Config.config.devMode = !Config.config.devMode;
             GuiOverlay.resetItems();
-            buttonDevMode.text = "Enable Developer Mode: " + (Config.devMode ? "ON" : "OFF");
+            buttonDevMode.text = "Enable Developer Mode: " + (Config.config.devMode ? "ON" : "OFF");
         }
         HowManyItems.onSettingChanged();
     }
