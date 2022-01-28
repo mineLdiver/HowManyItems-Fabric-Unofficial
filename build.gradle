@@ -46,7 +46,7 @@ repositories {
         url "https://jitpack.io/"
     }
     maven {
-        url "http://glass-launcher.net:8082/snapshots"
+        url "https://maven.glass-launcher.net/snapshots"
     }
 }
 

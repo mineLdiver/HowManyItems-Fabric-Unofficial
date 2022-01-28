@@ -5,17 +5,26 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.SmeltingRecipeRegistry;
+import net.modificationstation.stationapi.api.recipe.StationRecipe;
+import net.modificationstation.stationapi.api.registry.BlockRegistry;
+import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.tags.TagEntry;
+import net.modificationstation.stationapi.api.tags.TagRegistry;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 
 public class TabSmelting extends TabWithTexture {
 
+	private static final Random RANDOM = new Random();
 	protected Map recipesComplete;
-	protected ArrayList<ItemInstance[]> recipes = new ArrayList<>();
+	protected ArrayList<Object[]> recipes = new ArrayList<>();
 	private ArrayList<ItemInstance> fuels;
 	private BlockBase tabBlock;
 	private int metadata;
@@ -92,26 +101,44 @@ public class TabSmelting extends TabWithTexture {
             int k = index + j;
             if(k < recipes.size())
             {
-            	ItemInstance[] recipe = (ItemInstance[])recipes.get(k);
-            	for (int i = 0; i < recipe.length; i++) {
-            		items[j][i] = recipe[i];
-            		if (recipe[i] != null && recipe[i].getDamage() == -1) {
-                    	if (recipe[i].usesMeta()) {
-                    		if (filter != null && recipe[i].itemId == filter.itemId) {
-                    			items[j][i] = new ItemInstance(recipe[i].getType(), 0, filter.getDamage());
-                    		}
-                    		else {
-                    			items[j][i] = new ItemInstance(recipe[i].getType());
-                    		}
-                    	}
-                    	else if (filter != null && recipe[i].itemId == filter.itemId){
-                    		items[j][i] = new ItemInstance(recipe[i].getType(), 0, filter.getDamage());
-                    	}
-                    }
-            	}
-                if(fuels != null) {
-                    items[j][2] = fuels.get(rand.nextInt(fuels.size()));
-                }
+            	Object[] recipeObj = recipes.get(k);
+            	if (recipeObj instanceof ItemInstance[]) {
+            		ItemInstance[] recipe = (ItemInstance[]) recipeObj;
+					for (int i = 0; i < recipe.length; i++) {
+						items[j][i] = recipe[i];
+						if (recipe[i] != null && recipe[i].getDamage() == -1) {
+							if (recipe[i].usesMeta()) {
+								if (filter != null && recipe[i].itemId == filter.itemId) {
+									items[j][i] = new ItemInstance(recipe[i].getType(), 0, filter.getDamage());
+								} else {
+									items[j][i] = new ItemInstance(recipe[i].getType());
+								}
+							} else if (filter != null && recipe[i].itemId == filter.itemId) {
+								items[j][i] = new ItemInstance(recipe[i].getType(), 0, filter.getDamage());
+							}
+						}
+					}
+				}
+            	else if (recipeObj instanceof TagEntry[]) {
+					TagEntry[] recipe = (TagEntry[]) recipeObj;
+					for (int i = 0; i < recipe.length; i++) {
+						items[j][i] = recipe[i].displayItem;
+						if (recipe[i] != null && recipe[i].displayItem.getDamage() == -1) {
+							if (recipe[i].displayItem.usesMeta()) {
+								if (filter != null && recipe[i].displayItem.itemId == filter.itemId) {
+									items[j][i] = new ItemInstance(recipe[i].displayItem.getType(), 0, filter.getDamage());
+								} else {
+									items[j][i] = new ItemInstance(recipe[i].displayItem.getType());
+								}
+							} else if (filter != null && recipe[i].displayItem.itemId == filter.itemId) {
+								items[j][i] = new ItemInstance(recipe[i].displayItem.getType(), 0, filter.getDamage());
+							}
+						}
+					}
+				}
+				if (fuels != null) {
+					items[j][2] = fuels.get(RANDOM.nextInt(fuels.size()));
+				}
              }
 
             if(items[j][0] == null && recipesOnThisPage > j) {
@@ -141,40 +168,45 @@ public class TabSmelting extends TabWithTexture {
 			if (filter != null) dmg = filter.getDamage();
 			
 			ItemInstance output = (ItemInstance)(recipesComplete.get(obj));
-			ItemInstance input = null;
+			Object input = null;
 			if(obj != null) {
-				//fix for nfc 1.8.7
-				if(obj instanceof String) {
-					String[] string = ((String)obj).split(":");
-					obj = Integer.parseInt(string[0]);
-					dmg = Integer.parseInt(string[1]);
-				}
-				else if (obj instanceof ItemInstance) {
+				if (obj instanceof ItemInstance) {
 					ItemInstance itemInstance = (ItemInstance) obj;
 					obj = itemInstance.itemId;
 					dmg = itemInstance.getDamage();
 				}
-				if ((Integer)obj < BlockBase.BY_ID.length) {
-					if(BlockBase.BY_ID[(Integer)obj] == null) continue;
-					input = new ItemInstance(BlockBase.BY_ID[(Integer)obj], 1, dmg);
-				}
-				else {
-					if((Integer)obj < ItemBase.byId.length)
-					input = new ItemInstance(ItemBase.byId[(Integer)obj], 1, dmg);
-					//fix for tmim's mods
-					else if(damagedFurnaceInput && (Integer)obj - (output.getDamage() << 16) < BlockBase.BY_ID.length){
-						if(BlockBase.BY_ID[(Integer)obj - (output.getDamage() << 16)] == null) continue;
-						input = new ItemInstance(BlockBase.BY_ID[(Integer)obj - (output.getDamage() << 16)], 1, output.getDamage());
+				else if (obj instanceof Identifier) {
+					Optional<List<TagEntry>> tagEntries = TagRegistry.INSTANCE.get((Identifier) obj);
+					if (tagEntries.isPresent()) {
+						obj = tagEntries.get().toArray(new TagEntry[]{});
 					}
-					else continue;
 				}
+				if (obj instanceof Integer) {
+					if ((Integer) obj < BlockBase.BY_ID.length) {
+						if (BlockBase.BY_ID[(Integer) obj] == null) continue;
+						input = new ItemInstance(BlockBase.BY_ID[(Integer) obj], 1, dmg);
+					} else {
+						if ((Integer) obj < ItemBase.byId.length) {
+							input = new ItemInstance(ItemBase.byId[(Integer) obj], 1, dmg);
+						} else if (damagedFurnaceInput && (Integer) obj - (output.getDamage() << 16) < BlockBase.BY_ID.length) {
+							if (BlockBase.BY_ID[(Integer) obj - (output.getDamage() << 16)] == null) continue;
+							input = new ItemInstance(BlockBase.BY_ID[(Integer) obj - (output.getDamage() << 16)], 1, output.getDamage());
+						} else continue;
+					}
+				}
+				else if (obj instanceof TagEntry[]) {
+					input = obj;
+				}
+				else throw new ClassCastException("Invalid recipe item type " + obj.getClass().getName() + "!");
 			}
-			if(filter == null ||
-					(getUses && input != null && input.itemId == filter.itemId ) ||
-					(!getUses && output.itemId == filter.itemId && (output.getDamage() == filter.getDamage() || output.getDamage() < 0 || !output.usesMeta())))
+			if(input instanceof ItemInstance && (filter == null || (getUses && ((ItemInstance) input).itemId == filter.itemId ) || (!getUses && output.itemId == filter.itemId && (output.getDamage() == filter.getDamage() || output.getDamage() < 0 || !output.usesMeta()))))
 			{
-				recipes.add(new ItemInstance[]{output, input});
+				recipes.add(new Object[]{output, input});
             }
+			else if(input instanceof TagEntry[] && (filter == null || (getUses && ((TagEntry[]) input)[RANDOM.nextInt(((TagEntry[]) input).length)].displayItem.itemId == filter.itemId ) || (!getUses && output.itemId == filter.itemId && (output.getDamage() == filter.getDamage() || output.getDamage() < 0 || !output.usesMeta()))))
+			{
+				recipes.add(new Object[]{output, input});
+			}
 			
 		}
 		size = recipes.size();
@@ -186,6 +218,4 @@ public class TabSmelting extends TabWithTexture {
 	public ItemInstance getTabItem() {
 		return new ItemInstance(tabBlock, 1, metadata);
 	}
-	
-	protected Random rand = new Random();
 }
