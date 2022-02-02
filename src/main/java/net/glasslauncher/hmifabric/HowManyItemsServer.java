@@ -1,5 +1,6 @@
 package net.glasslauncher.hmifabric;
 
+import com.google.gson.Gson;
 import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.entity.Item;
@@ -32,14 +33,20 @@ public class HowManyItemsServer {
     @EventListener
     public void registerMessageListeners(MessageListenerRegistryEvent event) {
         event.registry.register(Identifier.of(modID, "giveItem"), HowManyItemsServer::handleGivePacket);
+        event.registry.register(Identifier.of(modID, "heal"), HowManyItemsServer::handleHealPacket);
     }
 
     public static void handleGivePacket(PlayerBase player, Message packet) {
-        if (((MinecraftServer) FabricLoader.getInstance().getGameInstance()).serverPlayerConnectionManager.isOp(player.name)) {
-            int[] data = packet.ints;
-            ItemInstance itemInstance = new ItemInstance(data[0], data[1], data[2]);
+        if (((MinecraftServer) FabricLoader.getInstance().getGameInstance()).serverPlayerConnectionManager.isOp(player.name) && packet.strings.length == 1) {
+            ItemInstance itemInstance = new Gson().fromJson(packet.strings[0], ItemInstance.class); // Is this stupid? I have no idea.
             Item itemEntity = new Item(player.level, player.x, player.y, player.z, itemInstance);
             player.level.spawnEntity(itemEntity);
+        }
+    }
+
+    public static void handleHealPacket(PlayerBase player, Message packet) {
+        if (((MinecraftServer) FabricLoader.getInstance().getGameInstance()).serverPlayerConnectionManager.isOp(player.name)) {
+            player.addHealth(Integer.MAX_VALUE/2); // High to allow mods that mess with player health to be supported.
         }
     }
 }

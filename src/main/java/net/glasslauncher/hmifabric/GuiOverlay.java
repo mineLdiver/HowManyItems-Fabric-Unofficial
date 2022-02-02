@@ -490,7 +490,7 @@ public class GuiOverlay extends ScreenBase {
                 }
                 if (!searchBox.hovered(posX, posY))
                     try {
-                        mouseClickedMethod.invoke(screen, new Object[] {posX, posY, eventButton});
+                        mouseClickedMethod.invoke(screen, posX, posY, eventButton);
                     }
                     catch (Exception e) { e.printStackTrace(); }
             }
@@ -569,7 +569,7 @@ public class GuiOverlay extends ScreenBase {
                 }
             }
         }
-        else if(!minecraft.level.isClient && guibutton == buttonHeal) {
+        else if(guibutton == buttonHeal) {
             if(!minecraft.level.isClient) {
                 minecraft.player.addHealth(100);
                 minecraft.player.air = 300;
@@ -577,6 +577,9 @@ public class GuiOverlay extends ScreenBase {
                     minecraft.player.fire = -minecraft.player.field_1646;
                     minecraft.level.playSound(minecraft.player, "random.fizz", 0.7F, 1.6F + (Utils.rand.nextFloat() - Utils.rand.nextFloat()) * 0.4F);
                 }
+            }
+            else if (Config.isHMIServer) {
+                PacketHelper.send(new Message(Identifier.of("hmifabric:heal")));
             }
             else {
                 minecraft.player.sendChatMessage(Config.config.mpHealCommand);
@@ -590,7 +593,7 @@ public class GuiOverlay extends ScreenBase {
                         for(int i = 0; i < screen.container.slots.size(); i++)
                         {
                             Slot slot = (Slot)screen.container.slots.get(i);
-                            slot.setStack((ItemInstance)null);
+                            slot.setStack(null);
                         }
 
                     }
@@ -602,7 +605,7 @@ public class GuiOverlay extends ScreenBase {
                     {
                         Slot slot = (Slot)screen.container.slots.get(i);
                         if(slot.hasItem() && slot.getItem().isDamageAndIDIdentical(minecraft.player.inventory.getCursorItem()))
-                            slot.setStack((ItemInstance)null);
+                            slot.setStack(null);
                     }
                     deleteAllWaitUntil = System.currentTimeMillis() + 1000L;
                 }
