@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screen.ScreenBase;
 import net.minecraft.client.gui.screen.container.ContainerBase;
 import net.minecraft.client.gui.screen.container.Crafting;
 import net.minecraft.client.gui.screen.container.PlayerInventory;
+import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.util.ScreenScaler;
 import net.minecraft.container.slot.Slot;
 import net.minecraft.entity.player.AbstractClientPlayer;
@@ -33,10 +34,9 @@ public class TabCrafting extends TabWithTexture {
         this(tabCreator, new ArrayList<Object>(RecipeRegistry.getInstance().getRecipes()), BlockBase.WORKBENCH);
         for (int i = 0; i < recipesComplete.size(); i++) {
             //Removes recipes that are too big and ruin everything @flans mod
-            if(((Recipe)recipesComplete.get(i)).getIngredientCount() > 9)
-            {
+            if (((Recipe) recipesComplete.get(i)).getIngredientCount() > 9) {
                 recipesComplete.remove(i);
-                i-=1;
+                i -= 1;
             }
         }
         isVanillaWorkbench = true;
@@ -54,8 +54,8 @@ public class TabCrafting extends TabWithTexture {
         this.tabBlock = tabBlock;
         recipes = recipesComplete;
         int i = 1;
-        for(int l = 0; l < 3; l++) {
-            for(int i1 = 0; i1 < slotsWidth; i1++) {
+        for (int l = 0; l < 3; l++) {
+            for (int i1 = 0; i1 < slotsWidth; i1++) {
                 slots[i++] = new Integer[]{2 + i1 * 18, 5 + l * 18};
             }
         }
@@ -63,66 +63,66 @@ public class TabCrafting extends TabWithTexture {
     }
 
     @Override
-    public void draw(int x, int y, int recipeOnThisPageIndex, int cursorX, int cursorY) {
-        if (recipes.get(recipeOnThisPageIndex) instanceof ShapelessRecipe) {
-            Utils.bindTexture("assets/hmifabric/textures/shapeless_icon.png");
-            Utils.gui.blit(x + 5, y + 5, 0, 0, 36, 36);
+    public void draw(int x, int y, int recipeOnThisPageIndex, int recipeIndex, int cursorX, int cursorY) {
+        super.draw(x, y, recipeOnThisPageIndex, recipeIndex, cursorX, cursorY);
+        if (recipeIndex < recipes.size() && recipes.get(recipeIndex) instanceof ShapelessRecipe) {
+            Utils.bindTexture("/assets/hmifabric/textures/shapeless_icon.png");
+            double size = 8;
+            x += 80;
+            y += 16;
+            Tessellator tess = Tessellator.INSTANCE;
+            tess.start();
+            tess.vertex(x, y + size, 0, 0, 1);
+            tess.vertex(x + size, y + size, 0, 1, 1);
+            tess.vertex(x + size, y, 0, 1, 0);
+            tess.vertex(x, y, 0, 0, 0);
+            tess.draw();
         }
-        super.draw(x, y, recipeOnThisPageIndex, cursorX, cursorY);
     }
 
     @Override
     public ItemInstance[][] getItems(int index, ItemInstance filter) {
         ItemInstance[][] items = new ItemInstance[recipesPerPage][];
-        for(int j = 0; j < recipesPerPage; j++)
-        {
+        for (int j = 0; j < recipesPerPage; j++) {
             items[j] = new ItemInstance[slots.length];
             int k = index + j;
-            if(k < recipes.size())
-            {
-                try
-                {
+            if (k < recipes.size()) {
+                try {
                     Object recipeObj = recipes.get(k);
-                    if(recipeObj instanceof StationRecipe)
-                    {
+                    if (recipeObj instanceof StationRecipe) {
                         StationRecipe recipe = (StationRecipe) recipes.get(k);
                         ItemInstance[] list = recipe.getIngredients();
                         ItemInstance[] outputArray = recipe.getOutputs();
                         System.arraycopy(outputArray, 0, items[j], 0, outputArray.length);
-                        for(int j1 = 0; j1 < list.length; j1++)
-                        {
+                        for (int j1 = 0; j1 < list.length; j1++) {
                             ItemInstance item = list[j1];
                             items[j][j1 + 1] = item;
                             if (item != null && item.getDamage() == -1) {
                                 if (item.usesMeta()) {
                                     if (filter != null && item.itemId == filter.itemId) {
                                         items[j][j1 + 1] = new ItemInstance(item.getType(), 0, filter.getDamage());
-                                    }
-                                    else {
+                                    } else {
                                         items[j][j1 + 1] = new ItemInstance(item.getType());
                                     }
-                                }
-                                else if (filter != null && item.itemId == filter.itemId){
+                                } else if (filter != null && item.itemId == filter.itemId) {
                                     items[j][j1 + 1] = new ItemInstance(item.getType(), 0, filter.getDamage());
                                 }
                             }
                         }
 
                     }
-                }
-                catch(Throwable throwable)
-                {
+                } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }
             }
 
-            if(items[j][0] == null && recipesOnThisPage > j) {
+            if (items[j][0] == null && recipesOnThisPage > j) {
                 recipesOnThisPage = j;
                 redrawSlots = true;
                 break;
             }
-            if(items[j][0] != null && recipesOnThisPage == j) {
-                recipesOnThisPage = j+1;
+            if (items[j][0] != null && recipesOnThisPage == j) {
+                recipesOnThisPage = j + 1;
                 redrawSlots = true;
             }
         }
@@ -135,8 +135,7 @@ public class TabCrafting extends TabWithTexture {
         List<Object> arraylist = new ArrayList<>();
         if (filter == null) {
             recipes = recipesComplete;
-        }
-        else {
+        } else {
             for (Object o : recipesComplete) {
                 if (o instanceof StationRecipe) {
                     StationRecipe recipe = (StationRecipe) o;
@@ -144,8 +143,7 @@ public class TabCrafting extends TabWithTexture {
                         if (Arrays.stream(recipe.getOutputs()).anyMatch(itemInstance -> filter.itemId == itemInstance.itemId && (itemInstance.getDamage() == filter.getDamage() || itemInstance.getDamage() < 0 || !itemInstance.usesMeta()))) {
                             arraylist.add(o);
                         }
-                    }
-                    else {
+                    } else {
                         try {
                             ItemInstance[] aitemstack = recipe.getIngredients();
                             for (ItemInstance itemstack1 : aitemstack) {
@@ -176,8 +174,8 @@ public class TabCrafting extends TabWithTexture {
 
     @Override
     public Boolean drawSetupRecipeButton(ScreenBase parent, ItemInstance[] recipeItems) {
-        for(Class<? extends ContainerBase> gui : guiCraftingStations) {
-            if(gui.isInstance(parent)) return true;
+        for (Class<? extends ContainerBase> gui : guiCraftingStations) {
+            if (gui.isInstance(parent)) return true;
         }
         if (isVanillaWorkbench && (parent == null || isInv(parent))) {
             for (int i = 3; i < 10; i++) {
@@ -195,15 +193,14 @@ public class TabCrafting extends TabWithTexture {
         List<Object> list;
         if (parent instanceof ContainerBase)
             //noinspection unchecked
-            list = ((ContainerBase)parent).container.slots;
+            list = ((ContainerBase) parent).container.slots;
         else
             //noinspection unchecked
             list = Utils.getMC().player.container.slots;
         ItemInstance[] aslot = new ItemInstance[list.size()];
-        for(int i = 0; i < list.size(); i++)
-        {
-            if(((Slot)list.get(i)).hasItem())
-                aslot[i] = ((Slot)list.get(i)).getItem().copy();
+        for (int i = 0; i < list.size(); i++) {
+            if (((Slot) list.get(i)).hasItem())
+                aslot[i] = ((Slot) list.get(i)).getItem().copy();
         }
 
         aslot[0] = null;
@@ -233,10 +230,9 @@ public class TabCrafting extends TabWithTexture {
 
         for (int i = 1; i < recipeItems.length; i++) {
             ItemInstance[] aslot = new ItemInstance[list.size()];
-            for(int k = 0; k < list.size(); k++)
-            {
-                if(((Slot)list.get(k)).hasItem())
-                    aslot[k] = ((Slot)list.get(k)).getItem().copy();
+            for (int k = 0; k < list.size(); k++) {
+                if (((Slot) list.get(k)).hasItem())
+                    aslot[k] = ((Slot) list.get(k)).getItem().copy();
             }
             aslot[0] = null;
 
@@ -255,12 +251,12 @@ public class TabCrafting extends TabWithTexture {
             }
             int prevEqualItemCount = 1;
             for (int j = 1; j < i; j++) {
-                if(recipeItems[j] != null && recipeItems[j].isDamageAndIDIdentical(item)) {
+                if (recipeItems[j] != null && recipeItems[j].isDamageAndIDIdentical(item)) {
                     prevEqualItemCount++;
                 }
             }
             for (int j = 1; j < recipeItems.length; j++) {
-                if(recipeItems[j] != null && recipeItems[j].isDamageAndIDIdentical(item)) {
+                if (recipeItems[j] != null && recipeItems[j].isDamageAndIDIdentical(item)) {
                     itemStackSize[j - 1] = count / prevEqualItemCount;
                 }
             }
@@ -268,12 +264,12 @@ public class TabCrafting extends TabWithTexture {
         int finalItemStackSize = -1;
         for (int i = 0; i < itemStackSize.length; i++) {
             ItemInstance item = recipeItems[i + 1];
-            if(itemStackSize[i] == -1 || item.getMaxStackSize() == 1) continue;
-            if(finalItemStackSize == -1 || itemStackSize[i] < finalItemStackSize || finalItemStackSize > item.getMaxStackSize()) {
+            if (itemStackSize[i] == -1 || item.getMaxStackSize() == 1) continue;
+            if (finalItemStackSize == -1 || itemStackSize[i] < finalItemStackSize || finalItemStackSize > item.getMaxStackSize()) {
                 finalItemStackSize = Math.min(itemStackSize[i], item.getMaxStackSize());
             }
         }
-        if(finalItemStackSize > 0) return finalItemStackSize;
+        if (finalItemStackSize > 0) return finalItemStackSize;
         return 1;
     }
 
@@ -289,35 +285,35 @@ public class TabCrafting extends TabWithTexture {
             parent.init(Utils.getMC(), i, j);
             Utils.getMC().skipGameRender = false;
         }
-        ContainerBase container = ((ContainerBase)parent);
+        ContainerBase container = ((ContainerBase) parent);
         //noinspection unchecked
         List<Object> inventorySlots = container.container.slots;
 
         int recipeStackSize = 1;
-        if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
+        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
             recipeStackSize = recipeStackSize(inventorySlots, recipeItems);
         }
 
         this.player = Utils.getMC().player;
         this.inv = Utils.getMC().interactionManager;
         this.windowId = container.container.currentContainerId;
-        for(int recipeSlotIndex = 1; recipeSlotIndex < recipeItems.length; recipeSlotIndex++) {
+        for (int recipeSlotIndex = 1; recipeSlotIndex < recipeItems.length; recipeSlotIndex++) {
             if (isInv(parent) && recipeSlotIndex > 5)
                 break;
             int slotid = recipeSlotIndex;
             if (isInv(parent) && recipeSlotIndex > 3) {
                 slotid--;
             }
-            Slot recipeSlot = (Slot)inventorySlots.get(slotid);
+            Slot recipeSlot = (Slot) inventorySlots.get(slotid);
             //clear recipe slot
-            if(recipeSlot.hasItem()) {
+            if (recipeSlot.hasItem()) {
                 this.clickSlot(slotid, true, true);
 
                 if (recipeSlot.hasItem()) {
                     this.clickSlot(slotid, true, false);
                     if (player.inventory.getCursorItem() != null) {
                         for (int j = slotid + 1; j < inventorySlots.size(); j++) {
-                            Slot slot = (Slot)inventorySlots.get(j);
+                            Slot slot = (Slot) inventorySlots.get(j);
                             if (!slot.hasItem()) {
                                 this.clickSlot(j, true, false);
                                 break;
@@ -337,15 +333,14 @@ public class TabCrafting extends TabWithTexture {
             }
 
             //locate correct item and put in recipe slot
-            while(!recipeSlot.hasItem() || (recipeSlot.getItem().count < recipeStackSize && recipeSlot.getItem().getMaxStackSize() > 1))
+            while (!recipeSlot.hasItem() || (recipeSlot.getItem().count < recipeStackSize && recipeSlot.getItem().getMaxStackSize() > 1))
                 for (int inventorySlotIndex = recipeSlotIndex + 1; inventorySlotIndex < inventorySlots.size(); inventorySlotIndex++) {
-                    Slot inventorySlot = (Slot)inventorySlots.get(inventorySlotIndex);
+                    Slot inventorySlot = (Slot) inventorySlots.get(inventorySlotIndex);
                     if (inventorySlot.hasItem() && inventorySlot.getItem().itemId == item.itemId && (inventorySlot.getItem().getDamage() == item.getDamage() || item.getDamage() < 0 || !item.usesMeta())) {
                         this.clickSlot(inventorySlotIndex, true, false);
                         if (isInv(parent) && recipeSlotIndex > 3) {
                             this.clickSlot(recipeSlotIndex - 1, false, false);
-                        }
-                        else
+                        } else
                             this.clickSlot(recipeSlotIndex, false, false);
                         this.clickSlot(inventorySlotIndex, true, false);
                         break;

@@ -9,20 +9,17 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ScreenBase;
 import net.minecraft.client.gui.screen.container.ContainerBase;
 import net.minecraft.client.util.ScreenScaler;
-import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.client.event.network.MultiplayerLogoutEvent;
 import net.modificationstation.stationapi.api.client.event.option.KeyBindingRegisterEvent;
-import net.modificationstation.stationapi.api.event.entity.player.PlayerEvent;
 import net.modificationstation.stationapi.api.event.registry.MessageListenerRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
-import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
 import org.lwjgl.input.Mouse;
 
-import java.util.ArrayList;
-import java.util.logging.Logger;
+import java.util.*;
+import java.util.logging.*;
 
 import static net.glasslauncher.hmifabric.Utils.hiddenItems;
 
@@ -40,12 +37,12 @@ public class HowManyItems implements ClientModInitializer {
 
     @EventListener
     public void registerKeyBindings(KeyBindingRegisterEvent event) {
-        event.keyBindings.add(Config.toggleOverlay);
+        event.keyBindings.add(KeyBindings.toggleOverlay);
     }
 
     //Use this if you are a making a mod that adds a tab
     public static void addTab(Tab tab) {
-        if(tab != null) {
+        if (tab != null) {
             modTabs.add(tab);
         }
     }
@@ -67,22 +64,22 @@ public class HowManyItems implements ClientModInitializer {
     }
 
     public static void onSettingChanged() {
-        if(thisMod.overlay != null) thisMod.overlay.init();
+        if (thisMod.overlay != null) thisMod.overlay.init();
     }
 
     public void onTickInGUI(Minecraft mc, ScreenBase guiscreen) {
-        if(guiscreen instanceof ContainerBase) {
-            ContainerBase screen = (ContainerBase)guiscreen;
-            if(Config.config.overlayEnabled) {
-                if(GuiOverlay.screen != screen || overlay == null || screen.width != overlay.width || screen.height != overlay.height) {
+        if (guiscreen instanceof ContainerBase) {
+            ContainerBase screen = (ContainerBase) guiscreen;
+            if (Config.config.overlayEnabled) {
+                if (GuiOverlay.screen != screen || overlay == null || screen.width != overlay.width || screen.height != overlay.height) {
                     overlay = new GuiOverlay(screen);
                 }
                 overlay.onTick();
             }
             Utils.drawStoredToolTip();
-            if(Utils.isKeyDown(Config.pushRecipe) || Utils.isKeyDown(Config.pushUses)) {
-                if(!keyHeldLastTick) {
-                    boolean getUses = Utils.isKeyDown(Config.pushUses);
+            if (Utils.isKeyDown(KeyBindings.pushRecipe) || Utils.isKeyDown(KeyBindings.pushUses)) {
+                if (!keyHeldLastTick) {
+                    boolean getUses = Utils.isKeyDown(KeyBindings.pushUses);
                     ItemInstance newFilter = null;
 
                     ScreenScaler scaledresolution = new ScreenScaler(mc.options, mc.actualWidth, mc.actualHeight);
@@ -90,70 +87,61 @@ public class HowManyItems implements ClientModInitializer {
                     int j = scaledresolution.getScaledHeight();
                     int posX = (Mouse.getEventX() * i) / mc.actualWidth;
                     int posY = j - (Mouse.getEventY() * j) / mc.actualHeight - 1;
-                    newFilter = Utils.hoveredItem((ContainerBase)guiscreen, posX, posY);
+                    newFilter = Utils.hoveredItem((ContainerBase) guiscreen, posX, posY);
                     if (newFilter == null) {
                         newFilter = GuiOverlay.hoverItem;
                     }
-                    if(newFilter == null) {
-                        if(guiscreen instanceof GuiRecipeViewer)
-                            newFilter = ((GuiRecipeViewer)guiscreen).getHoverItem();
+                    if (newFilter == null) {
+                        if (guiscreen instanceof GuiRecipeViewer)
+                            newFilter = ((GuiRecipeViewer) guiscreen).getHoverItem();
                     }
-                    if(newFilter != null) {
+                    if (newFilter != null) {
                         pushRecipe(guiscreen, newFilter, getUses);
-                    }
-                    else {
-                        if(Config.config.overlayEnabled && guiscreen == GuiOverlay.screen && !GuiOverlay.searchBoxFocused() && Config.config.fastSearch) {
+                    } else {
+                        if (Config.config.overlayEnabled && guiscreen == GuiOverlay.screen && !GuiOverlay.searchBoxFocused() && Config.config.fastSearch) {
                             GuiOverlay.focusSearchBox();
                         }
                     }
                 }
-            }
-            else if(Utils.isKeyDown(Config.prevRecipe)) {
-                if(!keyHeldLastTick) {
+            } else if (Utils.isKeyDown(KeyBindings.prevRecipe)) {
+                if (!keyHeldLastTick) {
                     if (guiscreen instanceof GuiRecipeViewer && !GuiOverlay.searchBoxFocused()) {
                         ((GuiRecipeViewer) guiscreen).pop();
-                    }
-                    else {
-                        if(Config.config.overlayEnabled && guiscreen == GuiOverlay.screen && !GuiOverlay.searchBoxFocused() && Config.config.fastSearch)
-                            if(!GuiOverlay.emptySearchBox()) GuiOverlay.focusSearchBox();
+                    } else {
+                        if (Config.config.overlayEnabled && guiscreen == GuiOverlay.screen && !GuiOverlay.searchBoxFocused() && Config.config.fastSearch)
+                            if (!GuiOverlay.emptySearchBox()) GuiOverlay.focusSearchBox();
                     }
                 }
-            }
-            else if(Config.clearSearchBox.key == Config.focusSearchBox.key
-                    && Utils.isKeyDown(Config.clearSearchBox)) {
+            } else if (KeyBindings.clearSearchBox.key == KeyBindings.focusSearchBox.key
+                    && Utils.isKeyDown(KeyBindings.clearSearchBox)) {
 
-                if(System.currentTimeMillis() > focusCooldown) {
+                if (System.currentTimeMillis() > focusCooldown) {
                     focusCooldown = System.currentTimeMillis() + 800L;
-                    if(!GuiOverlay.searchBoxFocused())
+                    if (!GuiOverlay.searchBoxFocused())
                         GuiOverlay.clearSearchBox();
                     GuiOverlay.focusSearchBox();
                 }
-            }
-            else if(Utils.isKeyDown(Config.clearSearchBox)) {
+            } else if (Utils.isKeyDown(KeyBindings.clearSearchBox)) {
                 GuiOverlay.clearSearchBox();
-            }
-            else if(Utils.isKeyDown(Config.focusSearchBox)) {
-                if(System.currentTimeMillis() > focusCooldown) {
+            } else if (Utils.isKeyDown(KeyBindings.focusSearchBox)) {
+                if (System.currentTimeMillis() > focusCooldown) {
                     focusCooldown = System.currentTimeMillis() + 800L;
                     GuiOverlay.focusSearchBox();
                 }
-            }
-            else if(Utils.isKeyDown(Config.allRecipes)) {
+            } else if (Utils.isKeyDown(KeyBindings.allRecipes)) {
                 pushRecipe(guiscreen, null, false);
-            }
-            else {
+            } else {
                 keyHeldLastTick = false;
             }
-            if(Utils.isKeyDown(Config.pushRecipe) || Utils.isKeyDown(Config.pushUses) || Utils.isKeyDown(Config.prevRecipe)) {
+            if (Utils.isKeyDown(KeyBindings.pushRecipe) || Utils.isKeyDown(KeyBindings.pushUses) || Utils.isKeyDown(KeyBindings.prevRecipe)) {
                 keyHeldLastTick = true;
             }
 
         }
     }
 
-    public void onTickInGame(Minecraft minecraft)
-    {
-        if(minecraft.currentScreen == null && Utils.isKeyDown(Config.allRecipes) && !keyHeldLastTick) {
+    public void onTickInGame(Minecraft minecraft) {
+        if (minecraft.currentScreen == null && Utils.isKeyDown(KeyBindings.allRecipes) && !keyHeldLastTick) {
             keyHeldLastTick = true;
             pushRecipe(null, null, false);
         }
@@ -163,11 +151,10 @@ public class HowManyItems implements ClientModInitializer {
     private static long focusCooldown = 0L;
 
     public static void pushRecipe(ScreenBase gui, ItemInstance item, boolean getUses) {
-        if(Utils.getMC().player.inventory.getCursorItem() == null) {
+        if (Utils.getMC().player.inventory.getCursorItem() == null) {
             if (gui instanceof GuiRecipeViewer) {
                 ((GuiRecipeViewer) gui).push(item, getUses);
-            }
-            else if (!GuiOverlay.searchBoxFocused() && getTabs().size() > 0){
+            } else if (!GuiOverlay.searchBoxFocused() && getTabs().size() > 0) {
                 GuiRecipeViewer newgui = new GuiRecipeViewer(item, getUses, gui);
                 Utils.getMC().currentScreen = newgui;
                 ScreenScaler scaledresolution = new ScreenScaler(Utils.getMC().options, Utils.getMC().actualWidth, Utils.getMC().actualHeight);
@@ -182,8 +169,7 @@ public class HowManyItems implements ClientModInitializer {
     public static void pushTabBlock(ScreenBase gui, ItemInstance item) {
         if (gui instanceof GuiRecipeViewer) {
             ((GuiRecipeViewer) gui).pushTabBlock(item);
-        }
-        else if (!GuiOverlay.searchBoxFocused() && getTabs().size() > 0){
+        } else if (!GuiOverlay.searchBoxFocused() && getTabs().size() > 0) {
             Utils.getMC().lockCursor();
             GuiRecipeViewer newgui = new GuiRecipeViewer(item, gui);
             Utils.getMC().currentScreen = newgui;
@@ -206,7 +192,7 @@ public class HowManyItems implements ClientModInitializer {
     }
 
     public static ArrayList<Tab> getTabs() {
-        if(tabs == null) {
+        if (tabs == null) {
             allTabs = new ArrayList<>();
 
             TabUtils.loadTabs(allTabs, modID);

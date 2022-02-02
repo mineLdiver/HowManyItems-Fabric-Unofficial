@@ -109,13 +109,6 @@ dependencies {
     modImplementation("com.github.calmilamsy:glass-config-api:${project.gcapi_version}") {
         transitive false
     }
-
-    implementation "org.apache.commons:commons-lang3:3.5"
-    implementation "com.github.jhalterman:typetools:87240d6"
-    implementation "com.github.mineLdiver:expressions:f676bbe"
-    implementation "com.github.mineLdiver:UnsafeEvents:7efec57"
-    implementation "it.unimi.dsi:fastutil:8.5.6"
-    implementation "com.github.ben-manes.caffeine:caffeine:2.9.3"
 }
 
 processResources {

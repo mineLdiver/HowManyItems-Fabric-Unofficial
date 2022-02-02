@@ -3,6 +3,7 @@ package net.glasslauncher.hmifabric.mixin;
 import net.glasslauncher.hmifabric.Config;
 import net.glasslauncher.hmifabric.GuiOverlay;
 import net.glasslauncher.hmifabric.HowManyItems;
+import net.glasslauncher.hmifabric.KeyBindings;
 import net.glasslauncher.hmifabric.Utils;
 import net.minecraft.client.gui.screen.container.ContainerBase;
 import org.lwjgl.input.Keyboard;
@@ -16,7 +17,7 @@ public class MixinContainerBase {
 
     @Inject(method = "keyPressed(CI)V", at = @At(value = "HEAD"))
     private void keyPressed(char character, int key, CallbackInfo ci) {
-        if (Keyboard.getEventKey() == Config.toggleOverlay.key && Utils.keybindValid(Config.toggleOverlay)) {
+        if (Keyboard.getEventKey() == KeyBindings.toggleOverlay.key && Utils.keybindValid(KeyBindings.toggleOverlay)) {
             if (Utils.isGuiOpen(ContainerBase.class) && !GuiOverlay.searchBoxFocused()) {
                 Config.config.overlayEnabled = !Config.config.overlayEnabled;
                 if (HowManyItems.thisMod.overlay != null) HowManyItems.thisMod.overlay.toggle();

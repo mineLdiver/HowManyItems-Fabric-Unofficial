@@ -5,31 +5,27 @@ import net.minecraft.container.slot.Slot;
 import net.minecraft.entity.player.PlayerBase;
 
 
+public class ContainerRecipeViewer extends ContainerBase {
 
-public class ContainerRecipeViewer extends ContainerBase
-{
-
-    public ContainerRecipeViewer(InventoryRecipeViewer iinventory)
-    {
-    	//setting the windowId to -1 prevents server registering recipe clicks as inventory clicks
-    	this.currentContainerId = -1;
-    	inv = iinventory;
-    	resetSlots();
+    public ContainerRecipeViewer(InventoryRecipeViewer iinventory) {
+        //setting the windowId to -1 prevents server registering recipe clicks as inventory clicks
+        this.currentContainerId = -1;
+        inv = iinventory;
+        resetSlots();
     }
 
     public void resetSlots() {
-    	super.slots.clear();
-    	count = 0;
+        super.slots.clear();
+        count = 0;
     }
 
     // Not an override. Custom method.
     public void addSlot(int i, int j) {
-    	addSlot(new Slot(inv, count++, i, j));
+        addSlot(new Slot(inv, count++, i, j));
     }
 
     @Override
-    public boolean canUse(PlayerBase entityplayer)
-    {
+    public boolean canUse(PlayerBase entityplayer) {
         return inv.canPlayerUse(entityplayer);
     }
 
