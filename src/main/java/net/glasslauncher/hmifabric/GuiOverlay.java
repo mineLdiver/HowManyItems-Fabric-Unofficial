@@ -103,7 +103,7 @@ public class GuiOverlay extends ScreenBase {
         buttons.add(buttonNextPage = new GuiButtonHMI(id++, screen.width - (screen.width - k - xSize) / 3, 0, (screen.width - k - xSize) / 3, BUTTON_HEIGHT, "Next"));
         buttons.add(buttonPrevPage = new GuiButtonHMI(id++, k + xSize, 0, (screen.width - k - xSize) / 3, BUTTON_HEIGHT, "Prev"));
         if(Config.config.cheatsEnabled) {
-            boolean mp = minecraft.level.isClient;
+            boolean mp = minecraft.level.isServerSide;
             if(!mp || !Config.config.mpTimeDayCommand.isEmpty())
                 buttons.add(buttonTimeDay = new GuiButtonHMI(id++, 0, 0, BUTTON_HEIGHT, 12));
             if(!mp || !Config.config.mpTimeNightCommand.isEmpty())
@@ -311,23 +311,23 @@ public class GuiOverlay extends ScreenBase {
                 s = "View All Recipes";
             }
         }
-        else if(Config.config.cheatsEnabled && !minecraft.level.isClient && buttonTimeDay.isMouseOver(minecraft, posX, posY))
+        else if(Config.config.cheatsEnabled && !minecraft.level.isServerSide && buttonTimeDay.isMouseOver(minecraft, posX, posY))
         {
             s = "Set time to day";
         }
-        else if(Config.config.cheatsEnabled && !minecraft.level.isClient && buttonTimeNight.isMouseOver(minecraft, posX, posY))
+        else if(Config.config.cheatsEnabled && !minecraft.level.isServerSide && buttonTimeNight.isMouseOver(minecraft, posX, posY))
         {
             s = "Set time to night";
         }
-        else if(Config.config.cheatsEnabled && !minecraft.level.isClient && buttonToggleRain.isMouseOver(minecraft, posX, posY))
+        else if(Config.config.cheatsEnabled && !minecraft.level.isServerSide && buttonToggleRain.isMouseOver(minecraft, posX, posY))
         {
             s = "Toggle rain";
         }
-        else if(Config.config.cheatsEnabled && !minecraft.level.isClient && buttonHeal.isMouseOver(minecraft, posX, posY))
+        else if(Config.config.cheatsEnabled && !minecraft.level.isServerSide && buttonHeal.isMouseOver(minecraft, posX, posY))
         {
             s = "Heal";
         }
-        else if(Config.config.cheatsEnabled && !minecraft.level.isClient && buttonTrash.isMouseOver(minecraft, posX, posY))
+        else if(Config.config.cheatsEnabled && !minecraft.level.isServerSide && buttonTrash.isMouseOver(minecraft, posX, posY))
         {
             if(inventoryplayer.getCursorItem() == null) {
                 if(shiftHeld) {
@@ -400,7 +400,7 @@ public class GuiOverlay extends ScreenBase {
                     if(minecraft.player.inventory.getCursorItem() == null && Config.config.cheatsEnabled) {
 
                         if(eventButton == 0 || eventButton == 1) {
-                            if(!minecraft.level.isClient) {
+                            if(!minecraft.level.isServerSide) {
                                 ItemInstance spawnedItem = hoverItem.copy();
                                 if(eventButton == 0) spawnedItem.count = hoverItem.getMaxStackSize();
                                 else spawnedItem.count = 1;
@@ -461,7 +461,7 @@ public class GuiOverlay extends ScreenBase {
                     }
                 }
             }
-            if((minecraft.player.inventory.getCursorItem() != null && !minecraft.level.isClient && (hoverItem != null || (posX > k + (w % 18)/2 && posY > screen.height - BUTTON_HEIGHT + (canvasHeight % 18) /2 - canvasHeight
+            if((minecraft.player.inventory.getCursorItem() != null && !minecraft.level.isServerSide && (hoverItem != null || (posX > k + (w % 18)/2 && posY > screen.height - BUTTON_HEIGHT + (canvasHeight % 18) /2 - canvasHeight
                     && posX < screen.width - (w % 18)/2 && posY > BUTTON_HEIGHT + (canvasHeight % 18) /2  && posY < BUTTON_HEIGHT + canvasHeight))) && Config.config.cheatsEnabled) {
                 if(eventButton == 0) {
                     minecraft.player.inventory.setCursorItem(null);
@@ -470,7 +470,7 @@ public class GuiOverlay extends ScreenBase {
                     minecraft.player.inventory.setCursorItem(minecraft.player.inventory.getCursorItem().split(minecraft.player.inventory.getCursorItem().count - 1));
                 }
             }
-            else if(Config.config.cheatsEnabled && !minecraft.level.isClient && buttonTrash.isMouseOver(minecraft, posX, posY) && minecraft.player.inventory.getCursorItem() != null && eventButton == 1) {
+            else if(Config.config.cheatsEnabled && !minecraft.level.isServerSide && buttonTrash.isMouseOver(minecraft, posX, posY) && minecraft.player.inventory.getCursorItem() != null && eventButton == 1) {
                 minecraft.soundHelper.playSound("random.click", 1.0F, 1.0F);
                 if(minecraft.player.inventory.getCursorItem().count > 1) {
                     minecraft.player.inventory.setCursorItem(minecraft.player.inventory.getCursorItem().split(minecraft.player.inventory.getCursorItem().count - 1));
@@ -527,7 +527,7 @@ public class GuiOverlay extends ScreenBase {
             }
         }
         else if(guibutton == buttonTimeDay || guibutton == buttonTimeNight || guibutton == buttonToggleRain) {
-            if(!minecraft.level.isClient) {
+            if(!minecraft.level.isServerSide) {
 
                 try {
                     LevelProperties worldInfo = (LevelProperties)worldInfoField.get(minecraft.level);
@@ -570,7 +570,7 @@ public class GuiOverlay extends ScreenBase {
             }
         }
         else if(guibutton == buttonHeal) {
-            if(!minecraft.level.isClient) {
+            if(!minecraft.level.isServerSide) {
                 minecraft.player.addHealth(100);
                 minecraft.player.air = 300;
                 if(minecraft.player.method_1359()) {
@@ -585,7 +585,7 @@ public class GuiOverlay extends ScreenBase {
                 minecraft.player.sendChatMessage(Config.config.mpHealCommand);
             }
         }
-        else if(!minecraft.level.isClient && guibutton == buttonTrash) {
+        else if(!minecraft.level.isServerSide && guibutton == buttonTrash) {
             if(minecraft.player.inventory.getCursorItem() == null) {
                 if(shiftHeld) {
                     if(!(screen instanceof GuiRecipeViewer) && System.currentTimeMillis() > deleteAllWaitUntil)
