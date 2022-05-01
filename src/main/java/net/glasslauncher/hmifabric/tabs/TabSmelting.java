@@ -89,39 +89,42 @@ public class TabSmelting extends TabWithTexture {
             int k = index + j;
             if (k < recipes.size()) {
                 Object[] recipeObj = recipes.get(k);
-                if (recipeObj instanceof ItemInstance[]) {
-                    ItemInstance[] recipe = (ItemInstance[]) recipeObj;
+                if (recipeObj[1] instanceof ItemInstance[]) {
+                    ItemInstance[] recipe = (ItemInstance[]) recipeObj[1];
                     for (int i = 0; i < recipe.length; i++) {
-                        items[j][i] = recipe[i];
+                        int offset = i+1;
+                        items[j][offset] = recipe[i];
                         if (recipe[i] != null && recipe[i].getDamage() == -1) {
                             if (recipe[i].usesMeta()) {
                                 if (filter != null && recipe[i].itemId == filter.itemId) {
-                                    items[j][i] = new ItemInstance(recipe[i].getType(), 0, filter.getDamage());
+                                    items[j][offset] = new ItemInstance(recipe[i].getType(), 0, filter.getDamage());
                                 } else {
-                                    items[j][i] = new ItemInstance(recipe[i].getType());
+                                    items[j][offset] = new ItemInstance(recipe[i].getType());
                                 }
                             } else if (filter != null && recipe[i].itemId == filter.itemId) {
-                                items[j][i] = new ItemInstance(recipe[i].getType(), 0, filter.getDamage());
+                                items[j][offset] = new ItemInstance(recipe[i].getType(), 0, filter.getDamage());
                             }
                         }
                     }
-                } else if (recipeObj instanceof TagEntry[]) {
-                    TagEntry[] recipe = (TagEntry[]) recipeObj;
+                } else if (recipeObj[1] instanceof TagEntry[]) {
+                    TagEntry[] recipe = (TagEntry[]) recipeObj[1];
                     for (int i = 0; i < recipe.length; i++) {
-                        items[j][i] = recipe[i].displayItem;
+                        int offset = i+1;
+                        items[j][offset] = recipe[i].displayItem;
                         if (recipe[i] != null && recipe[i].displayItem.getDamage() == -1) {
                             if (recipe[i].displayItem.usesMeta()) {
                                 if (filter != null && recipe[i].displayItem.itemId == filter.itemId) {
-                                    items[j][i] = new ItemInstance(recipe[i].displayItem.getType(), 0, filter.getDamage());
+                                    items[j][offset] = new ItemInstance(recipe[i].displayItem.getType(), 0, filter.getDamage());
                                 } else {
-                                    items[j][i] = new ItemInstance(recipe[i].displayItem.getType());
+                                    items[j][offset] = new ItemInstance(recipe[i].displayItem.getType());
                                 }
                             } else if (filter != null && recipe[i].displayItem.itemId == filter.itemId) {
-                                items[j][i] = new ItemInstance(recipe[i].displayItem.getType(), 0, filter.getDamage());
+                                items[j][offset] = new ItemInstance(recipe[i].displayItem.getType(), 0, filter.getDamage());
                             }
                         }
                     }
                 }
+                items[j][0] = (ItemInstance) recipeObj[0];
                 if (fuels != null) {
                     items[j][2] = fuels.get(RANDOM.nextInt(fuels.size()));
                 }

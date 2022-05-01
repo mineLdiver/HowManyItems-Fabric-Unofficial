@@ -65,7 +65,7 @@ dependencies {
     // to change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.glasslauncher:bin:${project.yarn_mappings}"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "babric:fabric-loader:${project.loader_version}"
 
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.2'
 
@@ -87,6 +87,7 @@ dependencies {
     modImplementation("com.github.calmilamsy:glass-config-api:${project.gcapi_version}") {
         exclude module: "StationAPI"
         exclude module: "fabric-loader"
+        exclude module: "cursed-fabric-loader"
     }
 }
 
