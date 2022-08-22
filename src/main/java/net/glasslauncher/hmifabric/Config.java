@@ -9,9 +9,7 @@ import net.glasslauncher.mods.api.gcapi.api.GCAPI;
 import net.glasslauncher.mods.api.gcapi.api.GConfig;
 import net.glasslauncher.mods.api.gcapi.api.MultiplayerSynced;
 import net.glasslauncher.mods.api.gcapi.impl.ConfigFactories;
-import net.minecraft.client.options.KeyBinding;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import org.lwjgl.input.Keyboard;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -112,8 +110,12 @@ public class Config {
 
         @ConfigName("Draggable Recipe Viewer")
         public Boolean recipeViewerDraggableGui = false;
+        @ConfigName("Show Null Name Items")
+        @Comment("Shows items with null names. Can cause crashes with poorly made mods.")
+        public Boolean hideNullNames = false;
+
         @ConfigName("Developer Mode")
-        @Comment("Shows null items. Can cause crashes with poorly made mods.")
+        @Comment("Enables some extra tooltips. Breaks relatively easily, but shouldn't cause crashes.")
         public Boolean devMode = false;
 
         @ConfigName("Recipe Viewer GUI Width")

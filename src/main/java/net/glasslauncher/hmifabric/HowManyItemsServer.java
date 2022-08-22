@@ -14,6 +14,7 @@ import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.packet.PacketHelper;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.server.event.network.PlayerLoginEvent;
 
 public class HowManyItemsServer {
@@ -32,8 +33,8 @@ public class HowManyItemsServer {
 
     @EventListener
     public void registerMessageListeners(MessageListenerRegistryEvent event) {
-        event.registry.register(Identifier.of(modID, "giveItem"), HowManyItemsServer::handleGivePacket);
-        event.registry.register(Identifier.of(modID, "heal"), HowManyItemsServer::handleHealPacket);
+        Registry.register(event.registry, Identifier.of(modID, "giveItem"), HowManyItemsServer::handleGivePacket);
+        Registry.register(event.registry, Identifier.of(modID, "heal"), HowManyItemsServer::handleHealPacket);
     }
 
     public static void handleGivePacket(PlayerBase player, Message packet) {

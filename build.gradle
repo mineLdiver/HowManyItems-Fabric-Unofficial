@@ -133,5 +133,12 @@ publishing {
         // Notice: This block does NOT have the same function as the block in the top level.
         // The repositories here will be used for publishing your artifact, not for
         // retrieving dependencies.
+        maven {
+            url = "https://maven.glass-launcher.net/snapshots"
+            credentials {
+                username "buildbot"
+                password "LZWabNJ3RjL0nFLAX1J32uapjK/MocenWRZ+MlAYcmqG3TJYvY5Hl7iRWfPiv9Zn"
+            }
+        }
     }
 }

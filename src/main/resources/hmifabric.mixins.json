@@ -4,7 +4,8 @@
   "package": "net.glasslauncher.hmifabric.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "DrawableHelperAccessor"
+    "DrawableHelperAccessor",
+    "MixinItemBase"
   ],
   "server": [
   ],

@@ -16,6 +16,7 @@ import net.modificationstation.stationapi.api.event.registry.MessageListenerRegi
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.registry.Registry;
 import org.lwjgl.input.Mouse;
 
 import java.util.*;
@@ -214,7 +215,7 @@ public class HowManyItems implements ClientModInitializer {
 
     @EventListener
     public void registerMessageListeners(MessageListenerRegistryEvent messageListenerRegistry) {
-        messageListenerRegistry.registry.register(Identifier.of("hmifabric:handshake"), (playerBase, message) -> Config.isHMIServer = message.booleans[0]);
+        Registry.register(messageListenerRegistry.registry, Identifier.of("hmifabric:handshake"), (playerBase, message) -> Config.isHMIServer = message.booleans[0]);
     }
 
     @EventListener

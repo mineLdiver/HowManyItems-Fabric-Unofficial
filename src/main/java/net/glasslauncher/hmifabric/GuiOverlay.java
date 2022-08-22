@@ -805,21 +805,21 @@ public class GuiOverlay extends ScreenBase {
         if(searchBox != null && searchBox.getText().length() > 0) {
             for(ItemInstance currentItem : listToSearch) {
                 String s = (TranslationStorage.getInstance().method_995(currentItem.getTranslationKey()));
-                if(s.toLowerCase().contains(searchBox.getText().toLowerCase()) && (showHiddenItems || !hiddenItems.contains(currentItem)) && (Config.config.devMode || !Utils.getNiceItemName(currentItem).endsWith("null"))) {
+                if(s.toLowerCase().contains(searchBox.getText().toLowerCase()) && (showHiddenItems || !hiddenItems.contains(currentItem)) && (Config.config.hideNullNames || !Utils.getNiceItemName(currentItem).endsWith("null"))) {
                     newList.add(currentItem);
                 }
             }
         }
         else if(showHiddenItems) {
             for(ItemInstance currentItem : Utils.itemList()) {
-                if(Config.config.devMode || !(currentItem.getTranslationKey() == null || currentItem.getTranslationKey().endsWith("null"))) {
+                if(Config.config.hideNullNames || !(currentItem.getTranslationKey() == null || currentItem.getTranslationKey().endsWith("null"))) {
                     newList.add(currentItem);
                 }
             }
         }
         else {
             for(ItemInstance currentItem : Utils.itemList()) {
-                if(!hiddenItems.contains(currentItem) && (Config.config.devMode || !Utils.getNiceItemName(currentItem).endsWith("null"))) {
+                if(!hiddenItems.contains(currentItem) && (Config.config.hideNullNames || !Utils.getNiceItemName(currentItem).endsWith("null"))) {
                     newList.add(currentItem);
                 }
             }

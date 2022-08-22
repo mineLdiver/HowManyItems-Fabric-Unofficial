@@ -16,6 +16,7 @@ public class GuiOptionsHMI extends ScreenBase {
     private Button buttonFastSearch;
     private Button buttonHiding;
     private Button buttonInvertedScroll;
+    private Button buttonHideNullNames;
     private Button buttonDevMode;
 
     private Button buttonKeybinds;
@@ -38,7 +39,8 @@ public class GuiOptionsHMI extends ScreenBase {
         buttons.add(buttonFastSearch = new OptionButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Fast Search: " + (Config.config.fastSearch ? "ON" : "OFF")));
         buttons.add(buttonHiding = new OptionButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Hide Items Mode: " + (GuiOverlay.showHiddenItems ? "ON" : "OFF")));
         buttons.add(buttonInvertedScroll = new OptionButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Flip Scroll Direction: " + (Config.config.scrollInverted ? "ON" : "OFF")));
-        buttons.add(buttonDevMode = new OptionButton(++i, (width / 2 - (155 / 2)) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Enable Developer Mode: " + (Config.config.devMode ? "ON" : "OFF")));
+        buttons.add(buttonHideNullNames = new OptionButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Show Null Name Items: " + (Config.config.hideNullNames ? "ON" : "OFF")));
+        buttons.add(buttonDevMode = new OptionButton(++i, (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), "Enable Developer Mode: " + (Config.config.devMode ? "ON" : "OFF")));
 
         //buttons.add(new Button(++i, width / 2 - 100, height / 6 + 72 + 12, "Commands & Loadout Names..."));
         buttons.add(buttonKeybinds = new Button(++i, width / 2 - 100, height / 6 + 96 + 12, "Keybinds..."));
@@ -78,9 +80,12 @@ public class GuiOptionsHMI extends ScreenBase {
         } else if (guibutton == buttonTabOrder) {
             minecraft.openScreen(new GuiTabOrder(this));
             return;
+        } else if (guibutton == buttonHideNullNames) {
+            Config.config.hideNullNames = !Config.config.hideNullNames;
+            GuiOverlay.resetItems();
+            buttonHideNullNames.text = "Show Null Name Items: " + (Config.config.hideNullNames ? "ON" : "OFF");
         } else if (guibutton == buttonDevMode) {
             Config.config.devMode = !Config.config.devMode;
-            GuiOverlay.resetItems();
             buttonDevMode.text = "Enable Developer Mode: " + (Config.config.devMode ? "ON" : "OFF");
         }
         HowManyItems.onSettingChanged();
@@ -164,10 +169,17 @@ public class GuiOptionsHMI extends ScreenBase {
                     "Change recipe viewer tab order",
                     "Change recipe viewer gui size option"
             };
-        } else if (guibutton == buttonDevMode) {
+        } else if (guibutton == buttonHideNullNames) {
             return new String[]{
                     "Enable showing null items.",
                     "Good for testing if your items are registering properly."
+            };
+        }
+        else if (guibutton == buttonDevMode) {
+            return new String[]{
+                    "Enable showing of dev-related tooltips.",
+                    "These do not work on items that override",
+                    "CustomTooltipProvider."
             };
         }
         return null;
