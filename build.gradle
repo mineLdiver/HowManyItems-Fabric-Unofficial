@@ -84,10 +84,9 @@ dependencies {
     }
 
     implementation "blue.endless:jankson:1.2.1"
-    modImplementation("com.github.calmilamsy:glass-config-api:${project.gcapi_version}") {
+    modImplementation("net.glasslauncher.mods:GlassConfigAPI:${project.gcapi_version}") {
         exclude module: "StationAPI"
         exclude module: "fabric-loader"
-        exclude module: "cursed-fabric-loader"
     }
 }
 
