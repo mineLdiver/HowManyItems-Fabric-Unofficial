@@ -9,6 +9,7 @@ import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.vanillafix.block.Blocks;
+import net.modificationstation.stationapi.api.vanillafix.item.Items;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -29,7 +30,8 @@ public class TabSmelting extends TabWithTexture {
         recipesComplete = SmeltingRecipeRegistry.getInstance().getRecipes();
 
         fuels.add(new ItemInstance(ItemBase.stick));
-        fuels.add(new ItemInstance(ItemBase.coal));
+        fuels.add(new ItemInstance(Items.COAL));
+        fuels.add(new ItemInstance(Items.CHARCOAL));
         fuels.add(new ItemInstance(ItemBase.lavaBucket));
         fuels.add(new ItemInstance(Blocks.OAK_SAPLING));
         fuels.add(new ItemInstance(Blocks.BIRCH_SAPLING));
