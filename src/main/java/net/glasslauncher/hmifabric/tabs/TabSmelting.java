@@ -1,15 +1,13 @@
 package net.glasslauncher.hmifabric.tabs;
 
 import net.minecraft.block.BlockBase;
-import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.SmeltingRecipeRegistry;
+import net.modificationstation.stationapi.api.recipe.FuelRegistry;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.tag.TagKey;
-import net.modificationstation.stationapi.api.vanillafix.block.Blocks;
-import net.modificationstation.stationapi.api.vanillafix.item.Items;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -19,30 +17,14 @@ public class TabSmelting extends TabWithTexture {
     private static final Random RANDOM = new Random();
     protected Map recipesComplete;
     protected ArrayList<Object[]> recipes = new ArrayList<>();
-    private ArrayList<ItemInstance> fuels;
     private BlockBase tabBlock;
     private int metadata;
     private boolean damagedFurnaceInput = false;
 
     public TabSmelting(ModID tabCreator) {
-        this(tabCreator, new HashMap(), new ArrayList<>(), "/gui/furnace.png", BlockBase.FURNACE);
+        this(tabCreator, new HashMap(), "/gui/furnace.png", BlockBase.FURNACE);
 
         recipesComplete = SmeltingRecipeRegistry.getInstance().getRecipes();
-
-        fuels.add(new ItemInstance(ItemBase.stick));
-        fuels.add(new ItemInstance(Items.COAL));
-        fuels.add(new ItemInstance(Items.CHARCOAL));
-        fuels.add(new ItemInstance(ItemBase.lavaBucket));
-        fuels.add(new ItemInstance(Blocks.OAK_SAPLING));
-        fuels.add(new ItemInstance(Blocks.BIRCH_SAPLING));
-        fuels.add(new ItemInstance(Blocks.SPRUCE_SAPLING));
-        for (BlockBase block : BlockBase.BY_ID) {
-            if (block != null && (block.material == Material.WOOD /*|| ModLoader.AddAllFuel(block.id) > 0 Not sure how to reimplement in SL*/)
-                    //ignore signs, doors and locked chest
-                    && block.id != 63 && block.id != 64 && block.id != 68 && block.id != 95)
-                fuels.add(new ItemInstance(block));
-
-        }
 
 		/*
 		for(ItemBase item: ItemBase.byId) {
@@ -58,19 +40,18 @@ public class TabSmelting extends TabWithTexture {
         }
     }
 
-    public TabSmelting(ModID tabCreator, Map recipes, ArrayList<ItemInstance> fuels, String texturePath, BlockBase tabBlock) {
-        this(tabCreator, recipes, fuels, texturePath, tabBlock, 0);
+    public TabSmelting(ModID tabCreator, Map recipes, String texturePath, BlockBase tabBlock) {
+        this(tabCreator, recipes, texturePath, tabBlock, 0);
     }
 
-    public TabSmelting(ModID tabCreator, Map recipes, ArrayList<ItemInstance> fuels, String texturePath, BlockBase tabBlock, int metadata) {
-        this(tabCreator, 3, recipes, fuels, texturePath, 84, 56, 54, 15, tabBlock, metadata);
+    public TabSmelting(ModID tabCreator, Map recipes, String texturePath, BlockBase tabBlock, int metadata) {
+        this(tabCreator, 3, recipes, texturePath, 84, 56, 54, 15, tabBlock, metadata);
     }
 
-    public TabSmelting(ModID tabCreator, int slotsPerRecipe, Map recipes, ArrayList<ItemInstance> fuels, String texturePath, int width, int height, int textureX, int textureY, BlockBase tabBlock, int metadata) {
+    public TabSmelting(ModID tabCreator, int slotsPerRecipe, Map recipes, String texturePath, int width, int height, int textureX, int textureY, BlockBase tabBlock, int metadata) {
         this(tabCreator, slotsPerRecipe, texturePath, width, height, textureX, textureY, tabBlock, metadata);
 
         this.recipesComplete = recipes;
-        this.fuels = fuels;
     }
 
     public TabSmelting(ModID tabCreator, int slotsPerRecipe, String texturePath, int width, int height, int textureX, int textureY, BlockBase tabBlock, int metadata) {
@@ -133,9 +114,8 @@ public class TabSmelting extends TabWithTexture {
                     }
                 }
                 items[j][0] = (ItemInstance) recipeObj[0];
-                if (fuels != null) {
-                    items[j][2] = fuels.get(RANDOM.nextInt(fuels.size()));
-                }
+                ItemInstance[] fuels = FuelRegistry.getFuelsView().keySet().toArray(ItemInstance[]::new);
+                items[j][2] = fuels[RANDOM.nextInt(fuels.length)];
             }
 
             if (items[j][0] == null && recipesOnThisPage > j) {
