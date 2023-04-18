@@ -2,6 +2,7 @@ package net.glasslauncher.hmifabric.tabs;
 
 import net.glasslauncher.hmifabric.Utils;
 import net.minecraft.block.BlockBase;
+import net.minecraft.client.gui.screen.container.ContainerBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.registry.ModID;
 
@@ -154,7 +155,7 @@ public class TabGenericBlock extends Tab {
     }
 
     @Override
-    public void draw(int x, int y, int recipeOnThisPageIndex, int recipeIndex, int cursorX, int cursorY) {
+    public void draw(int x, int y, int recipeOnThisPageIndex, int cursorX, int cursorY) {
         drawSlotsAndArrows(x, y);
         Utils.drawScaledItem(getBlockToDraw(), x + WIDTH / 2 - 20, y + HEIGHT / 2 - 19, 40);
     }
@@ -174,6 +175,11 @@ public class TabGenericBlock extends Tab {
             return name;
         }
         return super.name();
+    }
+
+    @Override
+    public Class<? extends ContainerBase> getGuiClass() {
+        return null;
     }
 
 

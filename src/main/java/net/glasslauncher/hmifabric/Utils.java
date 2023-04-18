@@ -178,7 +178,7 @@ public class Utils {
     //Returns the number of enabled tabs
     public static int visibleTabSize() {
         int largestIndex = -1;
-        for (Tab tab : HowManyItems.allTabs) {
+        for (Tab tab : HowManyItems.getTabs()) {
             if (tab.index > largestIndex)
                 largestIndex = tab.index;
         }

@@ -8,19 +8,14 @@ import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.server.MinecraftServer;
 import net.modificationstation.stationapi.api.event.registry.MessageListenerRegistryEvent;
-import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.network.ModdedPacketHandler;
 import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.packet.PacketHelper;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.server.event.network.PlayerLoginEvent;
 
 public class HowManyItemsServer {
-
-    @Entrypoint.ModID
-    private static ModID modID;
 
     @EventListener
     public void handleLogin(PlayerLoginEvent event) {
@@ -33,8 +28,8 @@ public class HowManyItemsServer {
 
     @EventListener
     public void registerMessageListeners(MessageListenerRegistryEvent event) {
-        Registry.register(event.registry, Identifier.of(modID, "giveItem"), HowManyItemsServer::handleGivePacket);
-        Registry.register(event.registry, Identifier.of(modID, "heal"), HowManyItemsServer::handleHealPacket);
+        Registry.register(event.registry, Identifier.of(HowManyItems.MODID, "giveItem"), HowManyItemsServer::handleGivePacket);
+        Registry.register(event.registry, Identifier.of(HowManyItems.MODID, "heal"), HowManyItemsServer::handleHealPacket);
     }
 
     public static void handleGivePacket(PlayerBase player, Message packet) {

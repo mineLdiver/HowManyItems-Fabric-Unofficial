@@ -29,6 +29,7 @@ public class TabCrafting extends TabWithTexture {
     private final BlockBase tabBlock;
     private boolean isVanillaWorkbench = false; //THIS IS LAZY
     public ArrayList<Class<? extends ContainerBase>> guiCraftingStations = new ArrayList<>();
+    public int recipeIndex;
 
     public TabCrafting(ModID tabCreator) {
         this(tabCreator, new ArrayList<Object>(RecipeRegistry.getInstance().getRecipes()), BlockBase.WORKBENCH);
@@ -63,8 +64,8 @@ public class TabCrafting extends TabWithTexture {
     }
 
     @Override
-    public void draw(int x, int y, int recipeOnThisPageIndex, int recipeIndex, int cursorX, int cursorY) {
-        super.draw(x, y, recipeOnThisPageIndex, recipeIndex, cursorX, cursorY);
+    public void draw(int x, int y, int recipeOnThisPageIndex, int cursorX, int cursorY) {
+        super.draw(x, y, recipeOnThisPageIndex, cursorX, cursorY);
         if (recipeIndex < recipes.size() && recipes.get(recipeIndex) instanceof ShapelessRecipe) {
             Utils.bindTexture("/assets/hmifabric/textures/shapeless_icon.png");
             double size = 8;
@@ -81,7 +82,13 @@ public class TabCrafting extends TabWithTexture {
     }
 
     @Override
+    public Class<? extends ContainerBase> getGuiClass() {
+        return Crafting.class;
+    }
+
+    @Override
     public ItemInstance[][] getItems(int index, ItemInstance filter) {
+        recipeIndex = index;
         ItemInstance[][] items = new ItemInstance[recipesPerPage][];
         for (int j = 0; j < recipesPerPage; j++) {
             items[j] = new ItemInstance[slots.length];

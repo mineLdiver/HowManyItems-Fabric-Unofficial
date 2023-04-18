@@ -1,5 +1,6 @@
 package net.glasslauncher.hmifabric.tabs;
 
+import net.minecraft.client.gui.screen.container.ContainerBase;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.registry.ModID;
@@ -36,11 +37,13 @@ public abstract class Tab {
 
     ;
 
-    public abstract void draw(int x, int y, int recipeOnThisPageIndex, int recipeIndex, int cursorX, int cursorY);
+    public abstract void draw(int x, int y, int recipeOnThisPageIndex, int cursorX, int cursorY);
 
     public String name() {
         return TranslationStorage.getInstance().method_995(getTabItem().getTranslationKey());
     }
+
+    public abstract Class<? extends ContainerBase> getGuiClass();
 
     public ArrayList<ItemInstance> equivalentCraftingStations = new ArrayList<>();
 

@@ -22,7 +22,7 @@ public abstract class TabWithTexture extends Tab {
     }
 
     @Override
-    public void draw(int x, int y, int recipeOnThisPageIndex, int recipeIndex, int cursorX, int cursorY) {
+    public void draw(int x, int y, int recipeOnThisPageIndex, int cursorX, int cursorY) {
         Utils.bindTexture(TEXTURE_PATH);
         Utils.disableLighting();
         Utils.gui.blit(x, y, TEXTURE_X, TEXTURE_Y, WIDTH, HEIGHT);
