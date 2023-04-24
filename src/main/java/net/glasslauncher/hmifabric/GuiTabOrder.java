@@ -30,8 +30,8 @@ public class GuiTabOrder extends ScreenBase {
 
     private float initialClickY;
     private long lastClicked;
-    private ArrayList<Tab> allTabs;
-    private ArrayList<Tab> currentTabs;
+    private List<Tab> allTabs;
+    private List<Tab> currentTabs;
     private Tab[] newOrder;
     private boolean[] tabEnabled;
 
@@ -43,9 +43,9 @@ public class GuiTabOrder extends ScreenBase {
         top = 32;
         slotHeight = 21;
         currentTabs = HowManyItems.getTabs();
-        allTabs = HowManyItems.allTabs;
         newOrder = new Tab[allTabs.size()];
         tabEnabled = new boolean[allTabs.size()];
+        allTabs = HowManyItems.getTabs();
     }
 
     @Override

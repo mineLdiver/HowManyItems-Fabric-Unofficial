@@ -1,8 +1,11 @@
 package net.glasslauncher.hmifabric;
 
-import net.fabricmc.api.ClientModInitializer;
+import net.glasslauncher.hmifabric.event.HMITabRegistryEvent;
 import net.glasslauncher.hmifabric.mixin.DrawableHelperAccessor;
 import net.glasslauncher.hmifabric.tabs.Tab;
+import net.glasslauncher.hmifabric.tabs.TabCrafting;
+import net.glasslauncher.hmifabric.tabs.TabRegistry;
+import net.glasslauncher.hmifabric.tabs.TabSmelting;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.Minecraft;
@@ -17,6 +20,7 @@ import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.registry.Registry;
+import net.modificationstation.stationapi.api.util.Null;
 import org.lwjgl.input.Mouse;
 
 import java.util.*;
@@ -24,12 +28,12 @@ import java.util.logging.*;
 
 import static net.glasslauncher.hmifabric.Utils.hiddenItems;
 
-public class HowManyItems implements ClientModInitializer {
+public class HowManyItems {
 
     public static Logger logger = Logger.getLogger(HowManyItems.class.getName());
 
     @Entrypoint.ModID
-    private static ModID modID;
+    public static final ModID MODID = Null.get();
 
     public GuiOverlay overlay;
 
@@ -39,13 +43,6 @@ public class HowManyItems implements ClientModInitializer {
     @EventListener
     public void registerKeyBindings(KeyBindingRegisterEvent event) {
         event.keyBindings.add(KeyBindings.toggleOverlay);
-    }
-
-    //Use this if you are a making a mod that adds a tab
-    public static void addTab(Tab tab) {
-        if (tab != null) {
-            modTabs.add(tab);
-        }
     }
 
     public static void addGuiToBlock(Class<? extends ContainerBase> gui, ItemInstance item) {
@@ -192,26 +189,14 @@ public class HowManyItems implements ClientModInitializer {
         }
     }
 
-    public static ArrayList<Tab> getTabs() {
-        if (tabs == null) {
-            allTabs = new ArrayList<>();
-
-            TabUtils.loadTabs(allTabs, modID);
-
-            allTabs.addAll(modTabs);
-            tabs = Config.orderTabs();
-        }
-        return tabs;
+    public static List<Tab> getTabs() {
+        return TabRegistry.INSTANCE.getEntrySet().stream().map(Map.Entry::getValue).toList();
     }
 
     public static void tabOrderChanged(boolean[] tabEnabled, Tab[] tabOrder) {
         Config.tabOrderChanged(tabEnabled, tabOrder);
-        tabs = Config.orderTabs();
+        Config.orderTabs();
     }
-
-    private static ArrayList<Tab> tabs;
-    public static ArrayList<Tab> allTabs;
-    private static final ArrayList<Tab> modTabs = new ArrayList<>();
 
     @EventListener
     public void registerMessageListeners(MessageListenerRegistryEvent messageListenerRegistry) {
@@ -223,8 +208,8 @@ public class HowManyItems implements ClientModInitializer {
         Config.isHMIServer = false;
     }
 
-    @Override
-    public void onInitializeClient() {
+    @EventListener
+    public void registerTabs(HMITabRegistryEvent event) {
         hiddenItems.add(new ItemInstance(BlockBase.STILL_WATER));
         hiddenItems.add(new ItemInstance(BlockBase.STILL_LAVA));
         hiddenItems.add(new ItemInstance(BlockBase.BED));
@@ -248,5 +233,9 @@ public class HowManyItems implements ClientModInitializer {
         hiddenItems.add(new ItemInstance(BlockBase.REDSTONE_REPEATER));
         hiddenItems.add(new ItemInstance(BlockBase.REDSTONE_REPEATER_LIT));
         hiddenItems.add(new ItemInstance(BlockBase.LOCKED_CHEST));
+
+        event.registry.register(Identifier.of(ModID.MINECRAFT, "crafting"), new TabCrafting(HowManyItems.MODID), new ItemInstance(BlockBase.WORKBENCH));
+        event.registry.register(Identifier.of(ModID.MINECRAFT, "smelting"), new TabSmelting(HowManyItems.MODID), new ItemInstance(BlockBase.FURNACE));
+        event.registry.addEquivalentCraftingStation(Identifier.of(ModID.MINECRAFT, "smelting"), new ItemInstance(BlockBase.FURNACE_LIT));
     }
 }

@@ -18,13 +18,9 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.text.MessageFormat;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.lang.reflect.*;
+import java.text.*;
+import java.util.*;
 
 public class GuiOverlay extends ScreenBase {
 

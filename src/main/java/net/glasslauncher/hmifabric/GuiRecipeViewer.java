@@ -613,7 +613,7 @@ public class GuiRecipeViewer extends ContainerBase {
                     int posY = EDGE_SIZE + gapY / 4 + i2 * (containerHeight - gapY / 2) / noY;
                     if (noX == 1) posX = (containerWidth - tab.WIDTH) / 2;
                     if (noY == 1) posY = (containerHeight - tab.HEIGHT) / 2;
-                    tab.draw(x + posX, y + posY, i - 1, (tab.index * tab.recipesPerPage) + i - 1, cursorPosX, cursorPosY);
+                    tab.draw(x + posX, y + posY, i - 1, cursorPosX, cursorPosY);
                     if (tab.redrawSlots) {
                         for (int q = 0; q < tab.slots.length; q++) {
                             container.addSlot(posX + tab.slots[q][0], posY + tab.slots[q][1]);
@@ -643,7 +643,7 @@ public class GuiRecipeViewer extends ContainerBase {
 
     private ScreenBase parent;
     private int tabIndex;
-    public static ArrayList<Tab> tabs;
+    public static List<Tab> tabs;
     private static InventoryRecipeViewer inv;
     private static ContainerRecipeViewer container;
 

@@ -4,6 +4,7 @@ import blue.endless.jankson.Comment;
 import blue.endless.jankson.JsonObject;
 import blue.endless.jankson.JsonPrimitive;
 import net.glasslauncher.hmifabric.tabs.Tab;
+import net.glasslauncher.hmifabric.tabs.TabRegistry;
 import net.glasslauncher.mods.api.gcapi.api.ConfigName;
 import net.glasslauncher.mods.api.gcapi.api.GCAPI;
 import net.glasslauncher.mods.api.gcapi.api.GConfig;
@@ -16,10 +17,10 @@ import java.util.*;
 
 public class Config {
 
-    public static ArrayList<Tab> orderTabs() {
+    public static void orderTabs() {
         ArrayList<Tab> orderedTabs = new ArrayList<>();
-        for (int i = 0; i < HowManyItems.allTabs.size(); i++) {
-            Tab tab = HowManyItems.allTabs.get(i);
+        for (int i = 0; i < TabRegistry.INSTANCE.tabOrder.size(); i++) {
+            Tab tab = TabRegistry.INSTANCE.tabOrder.get(i);
             while (orderedTabs.size() < tab.index + 1)
                 orderedTabs.add(null);
             if (tab.index >= 0) {
@@ -31,8 +32,8 @@ public class Config {
         for (int i = 0; i < orderedTabs.size(); i++) {
             orderedTabs.get(i).index = i;
         }
-        for (int i = 0; i < HowManyItems.allTabs.size(); i++) {
-            Tab tab = HowManyItems.allTabs.get(i);
+        for (int i = 0; i < TabRegistry.INSTANCE.tabOrder.size(); i++) {
+            Tab tab = TabRegistry.INSTANCE.tabOrder.get(i);
             if (tab.index == -2) {
                 tab.index = orderedTabs.size();
                 orderedTabs.add(tab);
@@ -41,12 +42,12 @@ public class Config {
             }
         }
         //writeConfig();
-        return orderedTabs;
+        TabRegistry.INSTANCE.tabOrder = orderedTabs;
     }
 
     public static void tabOrderChanged(boolean[] tabEnabled, Tab[] tabOrder) {
-        for (int i = 0; i < HowManyItems.allTabs.size(); i++) {
-            Tab tab = HowManyItems.allTabs.get(i);
+        for (int i = 0; i < TabRegistry.INSTANCE.tabOrder.size(); i++) {
+            Tab tab = TabRegistry.INSTANCE.tabOrder.get(i);
             for (int j = 0; j < tabOrder.length; j++) {
                 if (tab.equals(tabOrder[j])) {
                     tab.index = j;

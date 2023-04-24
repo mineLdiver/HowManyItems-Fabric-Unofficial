@@ -1,6 +1,8 @@
 package net.glasslauncher.hmifabric.tabs;
 
 import net.minecraft.block.BlockBase;
+import net.minecraft.client.gui.screen.container.ContainerBase;
+import net.minecraft.client.gui.screen.container.Furnace;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.SmeltingRecipeRegistry;
@@ -13,8 +15,8 @@ import java.util.*;
 import java.util.concurrent.*;
 
 public class TabSmelting extends TabWithTexture {
-
     private static final Random RANDOM = new Random();
+    public final Class<?> guiClass = TabSmelting.class;
     protected Map recipesComplete;
     protected ArrayList<Object[]> recipes = new ArrayList<>();
     private BlockBase tabBlock;
@@ -135,6 +137,11 @@ public class TabSmelting extends TabWithTexture {
     public void updateRecipes(ItemInstance filter, Boolean getUses) {
         recipes.clear();
         updateRecipesWithoutClear(filter, getUses);
+    }
+
+    @Override
+    public Class<? extends ContainerBase> getGuiClass() {
+        return Furnace.class;
     }
 
     public void updateRecipesWithoutClear(ItemInstance filter, Boolean getUses) {

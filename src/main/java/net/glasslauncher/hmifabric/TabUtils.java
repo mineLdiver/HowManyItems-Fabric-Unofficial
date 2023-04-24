@@ -1,35 +1,17 @@
 package net.glasslauncher.hmifabric;
 
-import net.glasslauncher.hmifabric.tabs.Tab;
 import net.glasslauncher.hmifabric.tabs.TabCrafting;
+import net.glasslauncher.hmifabric.tabs.TabRegistry;
 import net.glasslauncher.hmifabric.tabs.TabSmelting;
-import net.minecraft.block.BlockBase;
 import net.minecraft.client.gui.screen.container.ContainerBase;
-import net.minecraft.client.gui.screen.container.Crafting;
-import net.minecraft.client.gui.screen.container.Furnace;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.registry.Identifier;
 
 import java.util.*;
 
 public class TabUtils {
 
-    private static TabCrafting workbenchTab;
-    private static TabSmelting furnaceTab;
-
-    private static Map<Class<? extends ContainerBase>, ItemInstance> guiToBlock = new HashMap<>();
-
-    public static void loadTabs(ArrayList<Tab> tabList, ModID mod) {
-        workbenchTab = new TabCrafting(mod);
-        tabList.add(workbenchTab);
-        guiToBlock.put(Crafting.class, new ItemInstance(BlockBase.WORKBENCH));
-
-        furnaceTab = new TabSmelting(mod);
-        tabList.add(furnaceTab);
-        furnaceTab.equivalentCraftingStations.add(new ItemInstance(BlockBase.FURNACE_LIT));
-        guiToBlock.put(Furnace.class, new ItemInstance(BlockBase.FURNACE));
-
-    }
+    private static final Map<Class<? extends ContainerBase>, ItemInstance> guiToBlock = new HashMap<>();
 
     public static ItemInstance getItemFromGui(ContainerBase screen) {
         return guiToBlock.get(screen.getClass());
@@ -40,14 +22,20 @@ public class TabUtils {
     }
 
     public static void addWorkBenchGui(Class<? extends ContainerBase> gui) {
+        TabCrafting workbenchTab = (TabCrafting) TabRegistry.INSTANCE.get(Identifier.of(HowManyItems.MODID, "crafting"));
+        //noinspection ConstantConditions If this is null, we have bigger issues.
         workbenchTab.guiCraftingStations.add(gui);
     }
 
     public static void addEquivalentWorkbench(ItemInstance item) {
+        TabCrafting workbenchTab = (TabCrafting) TabRegistry.INSTANCE.get(Identifier.of(HowManyItems.MODID, "crafting"));
+        //noinspection ConstantConditions
         workbenchTab.equivalentCraftingStations.add(item);
     }
 
     public static void addEquivalentFurnace(ItemInstance item) {
+        TabSmelting furnaceTab = (TabSmelting) TabRegistry.INSTANCE.get(Identifier.of(HowManyItems.MODID, "smelting"));
+        //noinspection ConstantConditions
         furnaceTab.equivalentCraftingStations.add(item);
     }
 
